@@ -3,17 +3,12 @@ import os
 import json
 import re
 import psycopg2 as dbapi2
+from home import link1
+
 from flask import redirect
 from flask.helpers import url_for
 from flask import Flask, flash
 from flask import render_template
-from home import link1
-from club import link2
-from user import link3
-from admin import link4
-from event import link5
-from message import link6
-from classes import UserList, User
 from flask_login import login_manager, current_user
 from flask_login.login_manager import LoginManager
 from passlib.apps import custom_app_context as pwd_context
@@ -22,42 +17,37 @@ from flask_login.utils import login_required
 
 app = Flask(__name__)
 app.register_blueprint(link1)
-app.register_blueprint(link2)
-app.register_blueprint(link3)
-app.register_blueprint(link4)
-app.register_blueprint(link5)
-app.register_blueprint(link6)
 app.secret_key = 'gallifrey'
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'link1.home_page'
 login_manager.fresh_view = 'link1.home_page'
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User("zzz","zzz", 9999, "zzz", "zzz").get_user(user_id)
-
-@login_manager.unauthorized_handler
-def unauthorized():
-    # do stuff
-    flash("Unauthorized Access. Please Sign In or Sign Up!")
-    return redirect(url_for('link1.home_page'))
-
-def get_elephantsql_dsn(vcap_services):
-    """Returns the data source name for ElephantSQL."""
-    parsed = json.loads(vcap_services)
-    uri = parsed["elephantsql"][0]["credentials"]["uri"]
-    match = re.match('postgres://(.*?):(.*?)@(.*?)(:(\d+))?/(.*)', uri)
-    user, password, host, _, port, dbname = match.groups()
-    dsn = """user='{}' password='{}' host='{}' port={}
-             dbname='{}'""".format(user, password, host, port, dbname)
-    return dsn
-
-@app.route('/initdb/<int:key>/<int:kay>')
-def initdbVerification(key,kay):
-    if (ord(app.secret_key[0]) - kay) == key:
-        initialize_database()
-    return redirect(url_for('link1.home_page'))
+# @login_manager.user_loader
+# def load_user(user_id):
+#     return User("zzz","zzz", 9999, "zzz", "zzz").get_user(user_id)
+#
+# @login_manager.unauthorized_handler
+# def unauthorized():
+#     # do stuff
+#     flash("Unauthorized Access. Please Sign In or Sign Up!")
+#     return redirect(url_for('link1.home_page'))
+#
+# def get_elephantsql_dsn(vcap_services):
+#     """Returns the data source name for ElephantSQL."""
+#     parsed = json.loads(vcap_services)
+#     uri = parsed["elephantsql"][0]["credentials"]["uri"]
+#     match = re.match('postgres://(.*?):(.*?)@(.*?)(:(\d+))?/(.*)', uri)
+#     user, password, host, _, port, dbname = match.groups()
+#     dsn = """user='{}' password='{}' host='{}' port={}
+#              dbname='{}'""".format(user, password, host, port, dbname)
+#     return dsn
+#
+# @app.route('/initdb/<int:key>/<int:kay>')
+# def initdbVerification(key,kay):
+#     if (ord(app.secret_key[0]) - kay) == key:
+#         initialize_database()
+#     return redirect(url_for('link1.home_page'))
 
 
 def initialize_database():
@@ -166,8 +156,8 @@ if __name__ == '__main__':
         app.config['dsn'] = get_elephantsql_dsn(VCAP_SERVICES)
     else:
         app.config['dsn'] = """user='vagrant' password='vagrant'
-                               host='localhost' port=5432 dbname='itucsdb'"""
+                               host='localhost' port=5432 dbname='pags'"""
 
     REMEMBER_COOKIE_DURATION = timedelta(seconds = 10)
-    app.store = UserList(os.path.join(os.path.dirname(__file__),app.config['dsn']))
+    #app.store = UserList(os.path.join(os.path.dirname(__file__),app.config['dsn']))
     app.run(host='0.0.0.0', port=port, debug=debug)

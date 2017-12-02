@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
 
     config.vm.provider "virtualbox" do |vb|
         # vb.customize ["modifyvm", :id, "--memory", "1024"]
-        vb.customize ["modifyvm", :id, "--name", "itucsdb" ]
+        vb.customize ["modifyvm", :id, "--name", "pags" ]
     end
 
     # fix locale
@@ -29,7 +29,7 @@ Vagrant.configure("2") do |config|
     # ensure we have the packages we need
     config.vm.provision :puppet do |puppet|
         puppet.manifests_path = "vagrant"
-        puppet.manifest_file  = "itucsdb.pp"
+        puppet.manifest_file  = "pags.pp"
     end
 
     # initialize database

@@ -1,4 +1,4 @@
-class itucsdb {
+class pags {
 
   package { "build-essential":
     ensure => present,
@@ -74,4 +74,4 @@ class itucsdb {
 
 }
 
-include itucsdb
+include pags
