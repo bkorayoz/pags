@@ -3,3 +3,4 @@ Flask==0.12.2
 psycopg2==2.7.3.1
 passlib==1.7.1
 Flask_Login==0.4.0
+igdb_api_python==1.0

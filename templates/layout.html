@@ -18,7 +18,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename = 'css/search_v4.css') }}" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <title>{% block title %}{% endblock %}</title>
-<link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename = 'logo_colorful_c_v3.png') }}">
+<!-- <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename = 'logo_colorful_c_v3.png') }}"> -->
 </head>
 <style>
 a:hover{
@@ -31,29 +31,24 @@ a:hover{
 <nav class="navbar navbar-default navbar-inverse " style="background-color: #444" role="navigation">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <a style="color: #E88E0C;" class="brand-logo" href="{{ url_for('link1.home_page') }}"><img class="w3-opacity w3-hover-opacity-off" src="{{ url_for('static', filename = 'logo_colorful_c_v3.png')}}"></a>
-    </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li class="w3-hover-ccc"><a style="color: #E88E0C" href="{{ url_for('link2.clubs') }}"><strong>Clubs</strong></a></li>
+				<li class="w3-hover-ccc"><a style="color: #E88E0C;"href="{{ url_for('link1.home_page') }}">PAGS</a></li>
+        <li class="w3-hover-ccc"><a style="color: #E88E0C" href=""><strong>Games</strong></a></li>
       </ul>
 
       <ul class="nav navbar-nav navbar-right">
 
         {% if current_user.is_authenticated %}
-    <li class="w3-hover-sepia"><a style="color: #E88E0C" href="{{ url_for('link3.userProfile') }}"><span class="fa fa-user-circle fa-lg"></span>&nbsp;<strong> {{ current_user.rname }}</strong></a></li>
-    <li class="w3-hover-opacity"><a style="color: #FF3A00" href="{{ url_for('link1.logout') }}"><span title="Logout" class="glyphicon glyphicon-log-out"></span></a>
+    <li class="w3-hover-sepia"><a style="color: #E88E0C" href="{{url_for('link3.userProfile')}}"><span class="fa fa-user-circle fa-lg"></span>&nbsp;<strong> {{ current_user.name }}</strong></a></li>
+    <li class="w3-hover-opacity"><a style="color: #FF3A00" href="{{url_for('link1.logout')}}"><span title="Logout" class="glyphicon glyphicon-log-out"></span></a>
     </li>
 
 
     {% endif %}
         {% if current_user.is_anonymous %}
-    <!-- <button type="button" class="w3-button w3-padding-small w3-orange w3-circle" data-container="body" data-toggle="popover" data-placement="right" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus."><span class="glyphicon glyphicon-log-in"></span><a style="color: #E88E0C" href="{{ url_for('link1.logout') }}"><button title="Login" class="btn btn-default"></button></a></button> -->
-
-
 
     <li class="dropdown w3-hover-ccc">
           <a style="color: #E88E0C" href="#" class="dropdown-toggle " data-toggle="dropdown"><b>Login</b> <span class="glyphicon glyphicon-log-in"></span></a>
@@ -94,7 +89,7 @@ a:hover{
 
     {% endif %}
       </ul>
-      <form class="navbar-form navbar-right" method="POST" action="{{ url_for('link1.search') }}" role="search">
+      <form class="navbar-form navbar-right" method="POST" action="" role="search">
       			<div class="input-group" >
       	<input  type="text" class="form-control" placeholder="Search a club..."  name="keyword">
       	<span class="input-group-btn" style="color:E88E0C">

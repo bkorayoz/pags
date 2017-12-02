@@ -4,11 +4,11 @@
 {% block content %}
 <div class="w3-animate-zoom">
 
-	<img src="{{ url_for('static', filename = 'clava_colorful_resized_v3.png') }}" align="middle" alt="clava"><br><br><br>
-
+	<!-- <img src="{{ url_for('static', filename = 'clava_colorful_resized_v3.png') }}" align="middle" alt="clava"><br><br><br> -->
+<br><div class="w3-jumbo">PAGS</div> <br> <br>
 	<div class="row">
     <div class="col-lg-6 col-lg-offset-3">
-		<form  method = "POST" action= " {{ url_for('link1.search') }}">
+		<form  method = "POST" action= "">
 		<div class="input-group" >
       	<input type="text" class="form-control" placeholder="Search a club..."  name="keyword">
       	<span class="input-group-btn">
@@ -19,9 +19,9 @@
 		    </div><!-- /.col-lg-4 -->
 </div><!-- /.row -->
 
-	<br><br><br><img src="{{url_for('static', filename = 'line_colorful_v2.png') }}" align="middle" alt="line"><br><br><br>
+	<!-- <br><br><br><img src="{{url_for('static', filename = 'line_colorful_v2.png') }}" align="middle" alt="line"><br><br><br> -->
 
-	<center><div class="w3-large"><strong style="color: #E88E0C;">Upcoming Events</strong></div><br><br>
+	<!-- <center><div class="w3-large"><strong style="color: #E88E0C;">Upcoming Events</strong></div><br><br>
 
 	<div class="row">
 		{% for event in events %}
@@ -45,6 +45,6 @@
   </div>
 {%endfor%}
 </div>
-</div>
+</div> -->
 
 {% endblock %}
