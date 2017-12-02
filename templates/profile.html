@@ -1,0 +1,37 @@
+{% extends 'layout.html' %}
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+{% if current_user.is_authenticated %}
+<h1 class="w3-xlarge"> <strong>User Profile <strong> </h1> <br>
+<div class= "col-lg-6 col-lg-offset-3">
+<div class="w3-card-4">
+
+<header class="w3-container w3-orange">
+  <br>
+    <h1 class = "w3-large"><strong>{{current_user.rname}}</strong></h1>
+  <br>
+</header>
+
+<ul class="w3-ul w3-hoverable">
+  <li><span class="glyphicon glyphicon-user" style="color:#E88E0C" aria-hidden="true"></span>&nbsp;{{current_user.name}}</li>
+  <li><span class="fa fa-id-card-o" style="color:#E88E0C" aria-hidden="true"></span>&nbsp;{{current_user.number}}</li>
+  <li><span class="fa fa-at" style="color:#E88E0C" aria-hidden="true"></span>&nbsp;{{current_user.email}}</li>
+  <li><span class="fa  fa-users" style="color:#E88E0C" aria-hidden="true"></span>&nbsp;<strong>My Student Clubs</strong>
+    {% if clubnames %}
+    {% for c in clubnames %}
+      <p><a href="clubProfile/{{c[0]}}"><span class="glyphicon glyphicon-triangle-right" style="color:#E88E0C" aria-hidden="true"></span>&nbsp;{{c[1]}}</a></p>
+    {% endfor %}
+    {% else %}
+    <p> No membership in any club. </p>
+    {% endif %}
+  </li>
+</ul>
+
+<a href="{{ url_for('link3.editProfile') }}" class="w3-button w3-block w3-dark-grey"><span class="glyphicon glyphicon-edit"></span>&nbsp;Edit Profile</a>
+<a href="{{ url_for('link2.club_application') }}" class="w3-button w3-block w3-dark-grey"><span class="glyphicon glyphicon-plus"></span>&nbsp;Club Registration</a>
+</div>
+</div>
+
+{% endif %}
+{% endblock %}
