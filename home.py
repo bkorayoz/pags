@@ -16,21 +16,17 @@ from urllib.parse import urlparse, urljoin
 link1 = Blueprint('link1',__name__)
 dsn = """user='vagrant' password='vagrant' host='localhost' port=5432 dbname='pags'"""
 
-#
-# @link1.route('/')
-# def home_page():
-#     if current_user.is_authenticated and current_user.level == 1:
-#         return redirect(url_for('link4.admin_home'))
-#     else:
-#         arr = getevent(0) # CLUB NAME, EVENT NAME, EVENT EXP, DATE, LOCATION
-#         return render_template('home.html', events = arr)
-#
-# def is_safe_url(target):
-#     ref_url = urlparse(request.host_url)
-#     test_url = urlparse(urljoin(request.host_url, target))
-#     return test_url.scheme in ('http', 'https') and \
-#            ref_url.netloc == test_url.netloc
-#
+
+@link1.route('/')
+def home_page():
+        return render_template('home.html')
+
+def is_safe_url(target):
+    ref_url = urlparse(request.host_url)
+    test_url = urlparse(urljoin(request.host_url, target))
+    return test_url.scheme in ('http', 'https') and \
+           ref_url.netloc == test_url.netloc
+
 # @link1.route('/login', methods = ['GET', 'POST'])
 # def login():
 #     if request.method == "POST":

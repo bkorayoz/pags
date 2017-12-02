@@ -43,102 +43,69 @@ login_manager.fresh_view = 'link1.home_page'
 #              dbname='{}'""".format(user, password, host, port, dbname)
 #     return dsn
 #
-# @app.route('/initdb/<int:key>/<int:kay>')
+
 # def initdbVerification(key,kay):
 #     if (ord(app.secret_key[0]) - kay) == key:
 #         initialize_database()
 #     return redirect(url_for('link1.home_page'))
 
-
+@app.route('/initdb')
 def initialize_database():
         with dbapi2.connect(app.config['dsn']) as connection:
             cursor = connection.cursor()
-
             query = """DROP TABLE IF EXISTS USERDB CASCADE"""
             cursor.execute(query)
             query = """CREATE TABLE USERDB (ID SERIAL PRIMARY KEY,
-             NAME VARCHAR(40) NOT NULL, REALNAME VARCHAR(50) NOT NULL,NUMBER BIGINT,
-            EMAIL VARCHAR(50), PSW VARCHAR(200), LEVEL INTEGER DEFAULT 0) """
+            NAME VARCHAR(40) NOT NULL,
+            EMAIL VARCHAR(50), PSW VARCHAR(200)) """
             cursor.execute(query)
 
-            query = """INSERT INTO USERDB(NAME,REALNAME,PSW,LEVEL) VALUES(%s, %s, %s, %s)   """
-            cursor.execute(query,('admin','Admin', pwd_context.encrypt('admin'), 1,))
-
-            query = """INSERT INTO USERDB(NAME,REALNAME,PSW,NUMBER,EMAIL) VALUES(%s, %s, %s, %s, %s)   """
-            cursor.execute(query,('koray','Bulent Koray Oz', pwd_context.encrypt('123'),12345, 'koray@itu.edu.tr',))
-
-            query = """INSERT INTO USERDB(NAME,REALNAME,PSW,NUMBER,EMAIL) VALUES(%s, %s, %s, %s, %s)   """
-            cursor.execute(query,('turgut','Turgut Can Aydinalev', pwd_context.encrypt('123'),12345, 'turgut@itu.edu.tr',))
-
-            query = """INSERT INTO USERDB(NAME,REALNAME,PSW,NUMBER,EMAIL) VALUES(%s, %s, %s, %s, %s)   """
-            cursor.execute(query,('beste','Beste Burcu Bayhan', pwd_context.encrypt('123'),12345, 'beste@itu.edu.tr',))
-
-            query = """DROP TABLE IF EXISTS CLUBDB CASCADE"""
+            query = """DROP TABLE IF EXISTS GPU CASCADE"""
+            cursor.execute(query)
+            query = """CREATE TABLE GPU (ID SERIAL PRIMARY KEY,
+            NAME VARCHAR(40) NOT NULL,
+            SCORE FLOAT, RANKING INT """
             cursor.execute(query)
 
-            query = """ CREATE TABLE CLUBDB (ID SERIAL PRIMARY KEY, NAME VARCHAR(40) NOT NULL, TYPE VARCHAR(40) NOT NULL,
-            EXP VARCHAR(2000), ACTIVE INTEGER DEFAULT 0, CM INT REFERENCES USERDB(ID) ) """
+            query = """DROP TABLE IF EXISTS CPU CASCADE"""
+            cursor.execute(query)
+            query = """CREATE TABLE CPU (ID SERIAL PRIMARY KEY,
+            NAME VARCHAR(40) NOT NULL,
+            SCORE FLOAT, RANKING INT """
             cursor.execute(query)
 
-            query = """DROP TABLE IF EXISTS CLUBMEM CASCADE"""
+            query = """DROP TABLE IF EXISTS RAM CASCADE"""
+            cursor.execute(query)
+            query = """CREATE TABLE RAM (ID SERIAL PRIMARY KEY,
+            NAME VARCHAR(40) NOT NULL,
+            SCORE FLOAT, RANKING INT """
             cursor.execute(query)
 
-            query = """CREATE TABLE CLUBMEM (ID SERIAL PRIMARY KEY,CLUBID INT REFERENCES CLUBDB(ID) ON DELETE CASCADE, USERID INT REFERENCES USERDB(ID), LEVEL INTEGER DEFAULT 0)"""
-            cursor.execute(query)
-            connection.commit()
-
-            query = """DROP TABLE IF EXISTS SOCMED CASCADE"""
+            query = """DROP TABLE IF EXISTS SYSDB CASCADE"""
             cursor.execute(query)
 
-            query = """CREATE TABLE SOCMED (ID SERIAL PRIMARY KEY,CLUBID INT REFERENCES CLUBDB(ID) ON DELETE CASCADE, TYPESOC VARCHAR(20), LINK VARCHAR(100))"""
-            cursor.execute(query)
-            connection.commit()
+            query = """CREATE TABLE SYSDB (ID SERIAL PRIMARY KEY, USERID INT REFERENCES USERDB(ID), GPUID INT REFERENCES GPU(ID)
+            CPUID INT REFERENCES CPU(ID), RAMID INT REFERENCES RAM(ID), OSNAME VARCHAR(30)"""
 
-            query = """DROP TABLE IF EXISTS APPTAB CASCADE"""
-            cursor.execute(query)
-
-            query = """CREATE TABLE APPTAB(ID SERIAL PRIMARY KEY,CLUBID INT REFERENCES CLUBDB(ID) ON DELETE CASCADE, USERID INT REFERENCES USERDB(ID))"""
-            cursor.execute(query)
-            connection.commit()
-
-            query = """DROP TABLE IF EXISTS EVENT CASCADE"""
+            query = """DROP TABLE IF EXISTS USERFAV CASCADE"""
             cursor.execute(query)
 
-            query = """ CREATE TABLE EVENT (ID SERIAL PRIMARY KEY, CLUBID INT REFERENCES CLUBDB(ID) ON DELETE CASCADE ,NAME VARCHAR(40) NOT NULL,
-            EXP VARCHAR(200), DATE TIMESTAMP NOT NULL, LOCATION VARCHAR(20)) """
+            query = """CREATE TABLE USERREC (ID SERIAL PRIMARY KEY,
+            USERID INT REFERENCES USERDB(ID),GAMEID INT,DATE TIMESTAMP NOT NULL"""
             cursor.execute(query)
 
-            query = """DROP TABLE IF EXISTS BALANCE CASCADE"""
+            query = """CREATE TABLE USERFAV (ID SERIAL PRIMARY KEY,
+            USERID INT REFERENCES USERDB(ID),GAMEID INT"""
             cursor.execute(query)
 
-            query = """ CREATE TABLE BALANCE (ID SERIAL PRIMARY KEY, CLUBID INT REFERENCES CLUBDB(ID) ON DELETE CASCADE ,AMOUNT FLOAT NOT NULL,
-            EXPL VARCHAR(200)) """
-            cursor.execute(query)
-
-            query = """ INSERT INTO USERDB(NAME,REALNAME,NUMBER,EMAIL,PSW,LEVEL) VALUES ('ceyda', 'Ceyda Aladag', 123456, 'ceyda@itu.edu.tr', '$6$rounds=656000$2pciOKNmxUaBMP9o$E/9Gs1CKiuCE9wtqxOr3kQskYyhm52BzHyZz5QG3qFjuHxcKo3LUsq77sK/fSc5JG5hcXTqiMS/saAyKBFEuh.', 0);
-                        INSERT INTO USERDB(NAME,REALNAME,NUMBER,EMAIL,PSW,LEVEL) VALUES ('melis', 'Melis Gulenay', 4123, 'melis@itu.edu.tr', '$6$rounds=656000$ndu2sy9DMg5bVp1D$uPIOHBTnMWBjAjI4PuendQeYY5tNS7RcCfLSpaGxdxXBBcojaK07bMilkSXFC4qx7IqH1IgbcoelFYurcH.JS0', 0);
-                        INSERT INTO USERDB(NAME,REALNAME,NUMBER,EMAIL,PSW,LEVEL) VALUES ('mert', 'Mert Kartaltepe', 4125, 'mert@itu.edu.tr', '$6$rounds=656000$yi1XAGdkPXFN/S8x$Rayqxk8A7lmsrz/ScCkUn2zBHBd2wxtjpZ3aYBCAPo5WHLmjIyTHUf0oyeLtqys8TdWlSHxgu2zlwFpD.a.G4.', 0);
-                        INSERT INTO CLUBDB(NAME,TYPE,EXP,ACTIVE,CM) VALUES ('E-sport Klubu', 'Sport', 'Online oyun sporlari', 1, 3);
-                        INSERT INTO CLUBDB(NAME,TYPE,EXP,ACTIVE,CM) VALUES ('Felsefe Klubu', 'Culture/Art', 'Felsefi akim tartismalari', 1, 4);
-                        INSERT INTO CLUBDB(NAME,TYPE,EXP,ACTIVE,CM) VALUES ('Paten Klubu', 'Sport', 'Tekerlekli patenle yapilan tum sporlar', 1, 2);
-                        INSERT INTO CLUBDB(NAME,TYPE,EXP,ACTIVE,CM) VALUES ('Bilisim Klubu', 'Profession', 'Turkiye''de bilisim teknolojisi bilincinin arttirilmasi uzerine calismalar', 1, 7);
-                        INSERT INTO APPTAB(CLUBID,USERID) VALUES (1, 4);
-                        INSERT INTO APPTAB(CLUBID,USERID) VALUES (1, 5);
-                        INSERT INTO CLUBMEM(CLUBID,USERID,LEVEL) VALUES (1, 3, 1);
-                        INSERT INTO CLUBMEM(CLUBID,USERID,LEVEL) VALUES (2, 4, 1);
-                        INSERT INTO CLUBMEM(CLUBID,USERID,LEVEL) VALUES (3, 2, 1);
-                        INSERT INTO CLUBMEM(CLUBID,USERID,LEVEL) VALUES (1, 2, 3);
-                        INSERT INTO CLUBMEM(CLUBID,USERID,LEVEL) VALUES (1, 6, 0);
-                        INSERT INTO CLUBMEM(CLUBID,USERID,LEVEL) VALUES (1, 7, 4);
-                        INSERT INTO CLUBMEM(CLUBID,USERID,LEVEL) VALUES (4, 7, 1);
-                        INSERT INTO CLUBMEM(CLUBID,USERID,LEVEL) VALUES (3, 3, 0);
-                        INSERT INTO EVENT(CLUBID,NAME,EXP,DATE,LOCATION) VALUES (1, 'Hearthstone Turnuvasi', 'Odullu Hearthstone turnuvasi', '2017-12-29 20:00:00', 'MED');
-                        INSERT INTO EVENT(CLUBID,NAME,EXP,DATE,LOCATION) VALUES (2, 'Platon Hakkinda', 'Eserleri hakkinda tartisma', '2017-12-22 18:00:00', 'FEB');
-                        INSERT INTO EVENT(CLUBID,NAME,EXP,DATE,LOCATION) VALUES (3, 'Inline Hokey Maci', 'Hazirlik karsilasmasi', '2017-12-11 19:00:00', 'Spor Salonu');
-                        INSERT INTO SOCMED(CLUBID,TYPESOC,LINK) VALUES (2, 'Facebook', 'facebook.com/felsefeitu');
-                        """
-            cursor.execute(query)
-
+            # query = """INSERT INTO USERDB(NAME,PSW,EMAIL) VALUES(%s, %s, %s)   """
+            # cursor.execute(query,('koray', pwd_context.encrypt('123'), 'koray@itu.edu.tr',))
+            #
+            # query = """INSERT INTO USERDB(NAME,REALNAME,PSW,NUMBER,EMAIL) VALUES(%s, %s, %s, %s, %s)   """
+            # cursor.execute(query,('turgut','Turgut Can Aydinalev', pwd_context.encrypt('123'),12345, 'turgut@itu.edu.tr',))
+            #
+            # query = """INSERT INTO USERDB(NAME,REALNAME,PSW,NUMBER,EMAIL) VALUES(%s, %s, %s, %s, %s)   """
+            # cursor.execute(query,('beste','Beste Burcu Bayhan', pwd_context.encrypt('123'),12345, 'beste@itu.edu.tr',))
 
         flash("Database initialized.")
 
