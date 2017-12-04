@@ -9,14 +9,20 @@
 <table class="w3-table-all w3-hoverable w3-centered">
 <thead>
 <tr  class ="w3-orange">
-<th><strong>Club Name</strong></th>
-<th><strong>Club Type</strong></th>
+<th><strong>Name</strong></th>
+<th><strong>Genre</strong></th>
+<th><strong> IGDB Rating</strong></th>
+<th><strong>Category</strong></th>
 </tr>
 </thead>
 {% for r in result %}
 <tr>
-<td><a href="clubProfile/{{r[0]}}" style="display:block;">{{r[1]}}</a> </td>
-<td><a href="clubProfile/{{r[0]}}" style="display:block;">{{r[2]}}</a> </td>
+<td><a href="{{r['url']}}" style="display:block;">{{r['name']}}{% if r['release_dates'] %} ({{r['release_dates'][0]['y']}}) {% endif %}</a> </td>
+<td><a href="{{r['url']}}" style="display:block;">{% for g in r['genres'] %} {{g}} {% endfor %}</a> </td>
+<!-- <td><a href="{{r['url']}}" style="display:block;">{% for g in r['genres'] %} {{g['name']}} {% endfor %}</a> </td> -->
+<td><a href="{{r['url']}}" style="display:block;"> {% if r['rating'] %}{{r['rating']}} {% endif %}</a> </td>
+<td><a href="{{r['url']}}" style="display:block;"> </a> {{r['category']}} </td>
+<!-- <td>{{r}} </td> -->
 </tr>
 {% endfor %}
 </table>

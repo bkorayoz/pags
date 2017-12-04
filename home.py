@@ -15,20 +15,26 @@ from urllib.parse import urlparse, urljoin
 from classes import UserList,User
 from igdb_api_python.igdb import igdb
 link1 = Blueprint('link1',__name__)
-dsn = """user='vagrant' password='vagrant' host='localhost' port=5432 dbname='pags'"""
 
+igdbkey = "e2bc1782f5f9845a007d5a7398da2cf6"
+
+
+gamecategory = ["Main Game", "DLC/Addon", "Expansion", "Bundle","Standalone Expansion"]
+gamestatus = ["Released","Alpha","Beta","Early Access","Offline","Cancelled"]
 
 @link1.route('/')
 def home_page():
+    ig = igdb(igdbkey)
+    t = ig.platforms({'search': 'windows', 'fields': ['name']} ).text
+    #res = list(t['games'])
+    #res_json = json.dumps(res)
     # ig = igdb("e2bc1782f5f9845a007d5a7398da2cf6")
-    # t = ig.platforms({'ids':6,'fields' : ['games','name']}).json()[0]
-    # res = t['games']
-    # res_json = json.dumps(res)
-    # ig = igdb("e2bc1782f5f9845a007d5a7398da2cf6")
-    # result = ig.games({'ids':res_json})
-    # file = open("games.txt","w")
-    # file.write(str(result))
-    # file.close()
+
+    # arr = range(999)
+    # result = ig.games({'ids':arr}).body
+    file = open("games.txt","w")
+    file.write(str(t))
+    file.close()
     return render_template('home.html')
 
 def is_safe_url(target):
@@ -90,18 +96,17 @@ def register():
     else:
         flash("Unauthorized Access")
         return redirect(url_for('link1.home_page'))
-#
-# @link1.route("/search", methods = ['GET', 'POST'])
-# def search():
-#     if request.method == "POST":
-#         keyword = request.form['keyword']
-#         arr = get_clubs() # 0 -> id, 1 -> name, 2 -> type
-#         result = [s for s in arr if keyword.lower() in s[1].lower()]
-#         return render_template('search.html',keyword = keyword, result = result)
-#     else:
-#         flash("Unauthorized Access")
-#         return redirect(url_for('link1.home_page'))
-#
+
+@link1.route("/search", methods = ['GET', 'POST'])
+def search():
+    if request.method == "POST":
+        keyword = request.form['keyword']
+        arr = igdb_with_name(keyword)
+        return render_template('search.html',keyword = keyword, result = arr)
+    else:
+        flash("Unauthorized Access")
+        return redirect(url_for('link1.home_page'))
+
 # def get_clubs():
 #     with dbapi2.connect(current_app.config['dsn']) as connection:
 #         cursor = connection.cursor()
@@ -145,14 +150,31 @@ def getuserspec(uid):
         arr = cursor.fetchone()
         return arr
 
-
 def igdb_with_id(gameid):
-    ig = igdb("e2bc1782f5f9845a007d5a7398da2cf6")
+    ig = igdb(igdbkey)
     result = ig.games(gameid).json()
     return result[0]
 
 def igdb_with_name(gamename):
-    ig = igdb("e2bc1782f5f9845a007d5a7398da2cf6")
-    result = igdb.games({'search': "battlefield 1",'fields' : 'name'})
-    result = ig.games(gameid).json()
-    return result[0]
+    ig = igdb(igdbkey)
+    #result = ig.games({'search': gamename, 'expand' : ['genres']}).json()
+    result = ig.games({'search': gamename}).json()
+    i = 0
+    while i < len(result):
+        try:
+            print(result[i]['name'] + " -- " + str(result[i]['platforms']))
+            if not 6 in result[i]['platforms'] or 13 in result[i]['platforms']: # 3 linux, 6 pc-windows, 13 pc-dos, 14 mac
+                del result[i]
+                i -= 1
+        except KeyError:
+            del result[i]
+            i = -1
+        i+=1
+    for r in result:
+        r['category'] = gamecategory[r['category']]
+        try:
+            r['rating'] = round(r['rating'],2)
+        except:
+            pass
+
+    return result

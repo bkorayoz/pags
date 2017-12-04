@@ -18,7 +18,8 @@ link3 = Blueprint('link3',__name__)
 @link3.route('/profile')
 @login_required
 def userProfile():
-    return render_template('profile.html')
+    uid = User(current_user.name,"zzz", "zzz").get_id()[0]
+    return render_template('profile.html', uid = uid)
 
 
 @link3.route('/edit')

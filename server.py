@@ -15,7 +15,7 @@ from passlib.apps import custom_app_context as pwd_context
 from datetime import timedelta
 from flask_login.utils import login_required
 from classes import UserList,User
-
+from system_requirements_checker import SystemRequirementsChecker
 
 app = Flask(__name__)
 app.register_blueprint(link1)
@@ -51,6 +51,36 @@ def get_elephantsql_dsn(vcap_services):
 def initialize_database():
         with dbapi2.connect(app.config['dsn']) as connection:
             cursor = connection.cursor()
+            query = """DROP TABLE IF EXISTS GPU CASCADE"""
+            cursor.execute(query)
+
+            query = """CREATE TABLE GPU (ID SERIAL PRIMARY KEY,
+            NAME VARCHAR(60) NOT NULL,
+            SCORE FLOAT, RANKING INT) """
+            cursor.execute(query)
+
+            query = """DROP TABLE IF EXISTS CPU CASCADE"""
+            cursor.execute(query)
+            query = """CREATE TABLE CPU (ID SERIAL PRIMARY KEY,
+            NAME VARCHAR(60) NOT NULL,
+            SCORE FLOAT, RANKING INT) """
+            cursor.execute(query)
+
+            query = """DROP TABLE IF EXISTS RAM CASCADE"""
+            cursor.execute(query)
+
+            query = """CREATE TABLE RAM (ID SERIAL PRIMARY KEY,
+            NAME VARCHAR(60) NOT NULL,
+            SCORE FLOAT, RANKING INT) """
+            cursor.execute(query)
+
+            query = """DROP TABLE IF EXISTS SYSDB CASCADE"""
+            cursor.execute(query)
+
+            query = """CREATE TABLE SYSDB (ID SERIAL PRIMARY KEY, GPUID INT REFERENCES GPU(ID),
+            CPUID INT REFERENCES CPU(ID), RAMID INT REFERENCES RAM(ID), OSNAME VARCHAR(30))"""
+            cursor.execute(query)
+
             query = """DROP TABLE IF EXISTS USERDB CASCADE"""
             cursor.execute(query)
             query = """CREATE TABLE USERDB (ID SERIAL PRIMARY KEY,
@@ -58,32 +88,7 @@ def initialize_database():
             EMAIL VARCHAR(50), PSW VARCHAR(200), SYSID INT REFERENCES SYSDB(ID)) """
             cursor.execute(query)
 
-            query = """DROP TABLE IF EXISTS GPU CASCADE"""
-            cursor.execute(query)
-            query = """CREATE TABLE GPU (ID SERIAL PRIMARY KEY,
-            NAME VARCHAR(40) NOT NULL,
-            SCORE FLOAT, RANKING INT) """
-            cursor.execute(query)
 
-            query = """DROP TABLE IF EXISTS CPU CASCADE"""
-            cursor.execute(query)
-            query = """CREATE TABLE CPU (ID SERIAL PRIMARY KEY,
-            NAME VARCHAR(40) NOT NULL,
-            SCORE FLOAT, RANKING INT) """
-            cursor.execute(query)
-
-            query = """DROP TABLE IF EXISTS RAM CASCADE"""
-            cursor.execute(query)
-            query = """CREATE TABLE RAM (ID SERIAL PRIMARY KEY,
-            NAME VARCHAR(40) NOT NULL,
-            SCORE FLOAT, RANKING INT) """
-            cursor.execute(query)
-
-            query = """DROP TABLE IF EXISTS SYSDB CASCADE"""
-            cursor.execute(query)
-
-            query = """CREATE TABLE SYSDB (USERID INT REFERENCES USERDB(ID) PRIMARY KEY, GPUID INT REFERENCES GPU(ID)
-            CPUID INT REFERENCES CPU(ID), RAMID INT REFERENCES RAM(ID), OSNAME VARCHAR(30))"""
 
             query = """DROP TABLE IF EXISTS USERREC CASCADE"""
             cursor.execute(query)
@@ -98,22 +103,22 @@ def initialize_database():
             USERID INT REFERENCES USERDB(ID),GAMEID INT)"""
             cursor.execute(query)
 
-            # query = """INSERT INTO USERDB(NAME,PSW,EMAIL) VALUES(%s, %s, %s)   """
-            # cursor.execute(query,('koray', pwd_context.encrypt('123'), 'koray@itu.edu.tr',))
+            query = """INSERT INTO USERDB(NAME,PSW,EMAIL) VALUES(%s, %s, %s)   """
+            cursor.execute(query,('koray', pwd_context.encrypt('123'), 'koray@itu.edu.tr',))
             #
-            # query = """INSERT INTO USERDB(NAME,REALNAME,PSW,NUMBER,EMAIL) VALUES(%s, %s, %s, %s, %s)   """
-            # cursor.execute(query,('turgut','Turgut Can Aydinalev', pwd_context.encrypt('123'),12345, 'turgut@itu.edu.tr',))
+            query = """INSERT INTO USERDB(NAME,PSW,EMAIL) VALUES(%s, %s, %s)   """
+            cursor.execute(query,('turgut', pwd_context.encrypt('123'), 'turgut@itu.edu.tr',))
             #
             # query = """INSERT INTO USERDB(NAME,REALNAME,PSW,NUMBER,EMAIL) VALUES(%s, %s, %s, %s, %s)   """
             # cursor.execute(query,('beste','Beste Burcu Bayhan', pwd_context.encrypt('123'),12345, 'beste@itu.edu.tr',))
 
+        SystemRequirementsChecker()
         flash("Database initialized.")
 
         return redirect(url_for('link1.home_page'))
 
 
 if __name__ == '__main__':
-
     VCAP_APP_PORT = os.getenv('VCAP_APP_PORT')
     if VCAP_APP_PORT is not None:
         port, debug = int(VCAP_APP_PORT), False
@@ -127,5 +132,6 @@ if __name__ == '__main__':
                                host='localhost' port=5432 dbname='pags'"""
 
     REMEMBER_COOKIE_DURATION = timedelta(seconds = 10)
+
     app.store = UserList(os.path.join(os.path.dirname(__file__),app.config['dsn']))
     app.run(host='0.0.0.0', port=port, debug=debug)

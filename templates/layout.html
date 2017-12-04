@@ -36,7 +36,8 @@ a:hover{
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
 				<li class="w3-hover-ccc"><a style="color: #E88E0C;"href="{{ url_for('link1.home_page') }}">PAGS</a></li>
-        <li class="w3-hover-ccc"><a style="color: #E88E0C" href=""><strong>Games</strong></a></li>
+        <li class="w3-hover-ccc"><a style="color: #E88E0C" href=""><strong>Detailed Search</strong></a></li>
+				<li class="w3-hover-ccc"><a style="color: #E88E0C" href=""><strong>PAGS Reccommand Engine</strong></a></li>
       </ul>
 
       <ul class="nav navbar-nav navbar-right">
@@ -45,8 +46,6 @@ a:hover{
     <li class="w3-hover-sepia"><a style="color: #E88E0C" href="{{url_for('link3.userProfile')}}"><span class="fa fa-user-circle fa-lg"></span>&nbsp;<strong> {{ current_user.name }}</strong></a></li>
     <li class="w3-hover-opacity"><a style="color: #FF3A00" href="{{url_for('link1.logout')}}"><span title="Logout" class="glyphicon glyphicon-log-out"></span></a>
     </li>
-
-
     {% endif %}
         {% if current_user.is_anonymous %}
 
@@ -89,9 +88,9 @@ a:hover{
 
     {% endif %}
       </ul>
-      <form class="navbar-form navbar-right" method="POST" action="" role="search">
+      <form class="navbar-form navbar-right" method="POST" action="{{ url_for('link1.search') }}" role="search">
       			<div class="input-group" >
-      	<input  type="text" class="form-control" placeholder="Search a club..."  name="keyword">
+      	<input  type="text" class="form-control" placeholder="Search a game..."  name="keyword">
       	<span class="input-group-btn" style="color:E88E0C">
         	<button class="btn"  type="submit"><a class="glyphicon glyphicon-search"></a></button>
       	</span>
