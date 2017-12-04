@@ -24,17 +24,17 @@ gamestatus = ["Released","Alpha","Beta","Early Access","Offline","Cancelled"]
 
 @link1.route('/')
 def home_page():
-    ig = igdb(igdbkey)
-    t = ig.platforms({'search': 'windows', 'fields': ['name']} ).text
+    # ig = igdb(igdbkey)
+    # t = ig.platforms({'search': 'windows', 'fields': ['name']} ).text
     #res = list(t['games'])
     #res_json = json.dumps(res)
     # ig = igdb("e2bc1782f5f9845a007d5a7398da2cf6")
 
     # arr = range(999)
     # result = ig.games({'ids':arr}).body
-    file = open("games.txt","w")
-    file.write(str(t))
-    file.close()
+    # file = open("games.txt","w")
+    # file.write(str(t))
+    # file.close()
     return render_template('home.html')
 
 def is_safe_url(target):
