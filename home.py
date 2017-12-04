@@ -15,15 +15,30 @@ from urllib.parse import urlparse, urljoin
 from classes import UserList,User
 from igdb_api_python.igdb import igdb
 link1 = Blueprint('link1',__name__)
+from urllib.request import Request, urlopen
+import http.client
+import requests
 
 igdbkey = "e2bc1782f5f9845a007d5a7398da2cf6"
 
-
 gamecategory = ["Main Game", "DLC/Addon", "Expansion", "Bundle","Standalone Expansion"]
 gamestatus = ["Released","Alpha","Beta","Early Access","Offline","Cancelled"]
+debate_games = "https://www.game-debate.com/game/api/list"
+
+debate_ex = "https://www.game-debate.com/games/index.php?g_id=1164"
 
 @link1.route('/')
 def home_page():
+    r = requests.get(debate_ex)
+    file = open("games.txt","w")
+    file.write(r.text)
+    file.close()
+
+
+    # req = Request('https://www.game-debate.com/system-requirement-js-widget/script?domain=localhost:5000&p_id=640&gc_id=463')
+    # webpage = urlopen(req).read()
+    #
+    # print(str(webpage))
     # ig = igdb(igdbkey)
     # t = ig.platforms({'search': 'windows', 'fields': ['name']} ).text
     #res = list(t['games'])
