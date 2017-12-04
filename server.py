@@ -51,6 +51,7 @@ def get_elephantsql_dsn(vcap_services):
 def initialize_database():
         with dbapi2.connect(app.config['dsn']) as connection:
             cursor = connection.cursor()
+
             query = """DROP TABLE IF EXISTS GPU CASCADE"""
             cursor.execute(query)
 
@@ -77,7 +78,7 @@ def initialize_database():
             query = """DROP TABLE IF EXISTS SYSDB CASCADE"""
             cursor.execute(query)
 
-            query = """CREATE TABLE SYSDB (ID SERIAL PRIMARY KEY, GPUID INT REFERENCES GPU(ID),
+            query = """CREATE TABLE SYSDB (USERID  INT REFERENCES USERDB(ID) PRIMARY KEY, GPUID INT REFERENCES GPU(ID),
             CPUID INT REFERENCES CPU(ID), RAMID INT REFERENCES RAM(ID), OSNAME VARCHAR(30))"""
             cursor.execute(query)
 
@@ -85,7 +86,7 @@ def initialize_database():
             cursor.execute(query)
             query = """CREATE TABLE USERDB (ID SERIAL PRIMARY KEY,
             NAME VARCHAR(40) NOT NULL,
-            EMAIL VARCHAR(50), PSW VARCHAR(200), SYSID INT REFERENCES SYSDB(ID)) """
+            EMAIL VARCHAR(50), PSW VARCHAR(200)) """
             cursor.execute(query)
 
 
