@@ -19,7 +19,87 @@ link3 = Blueprint('link3',__name__)
 @login_required
 def userProfile():
     uid = User(current_user.name,"zzz", "zzz").get_id()[0]
-    return render_template('profile.html', uid = uid)
+    specs = getspecs()
+    return render_template('profile.html', uid = uid, specs = specs)
+
+@link3.route('/confighw')
+@login_required
+def confighw():
+    uid = User(current_user.name,"zzz", "zzz").get_id()[0]
+    cpu = getcpu()
+    gpu = getgpu()
+    ram = getram()
+    return render_template('confighw.html', uid = uid, cpu = cpu, gpu = gpu, ram = ram)
+
+@link3.route('/savehw',methods=['GET', 'POST'])
+@login_required
+def savehw():
+    if request.method == "POST":
+        uid = User(current_user.name,"zzz", "zzz").get_id()[0]
+        c = request.form['cpu']
+        g = request.form['gpu']
+        r = request.form['ram']
+        o = request.form['os']
+        with dbapi2._connect(current_app.config['dsn']) as connection:
+            cursor = connection.cursor()
+            query = """ SELECT ID FROM CPU WHERE (NAME = %s) """
+            cursor.execute(query,(c,))
+            cid = cursor.fetchone()[0]
+
+            query = """ SELECT ID FROM GPU WHERE (NAME = %s) """
+            cursor.execute(query,(g,))
+            gid = cursor.fetchone()[0]
+
+            query = """ SELECT ID FROM RAM WHERE (NAME = %s) """
+            cursor.execute(query,(r,))
+            rid = cursor.fetchone()[0]
+
+            query = """ SELECT COUNT(*) FROM SYSDB WHERE USERID = %s """
+            cursor.execute(query,(uid,))
+            count = cursor.fetchone()[0]
+            if count == 0:
+                query = """ INSERT INTO SYSDB(USERID,GPUID,CPUID,RAMID,OSNAME) VALUES (%s, %s, %s, %s, %s) """
+                cursor.execute(query,(uid,gid,cid,rid,o,))
+            else:
+                query = """UPDATE SYSDB SET GPUID=%s,CPUID=%s,RAMID=%s,OSNAME=%s WHERE(USERID=%s)"""
+                cursor.execute(query,(gid,cid,rid,o,uid,))
+
+        return redirect(url_for('link3.userProfile'))
+
+
+def getspecs():
+    uid = User(current_user.name,"zzz", "zzz").get_id()[0]
+    with dbapi2._connect(current_app.config['dsn']) as connection:
+        cursor = connection.cursor()
+        query = """ SELECT CPU.NAME,GPU.NAME,RAM.NAME FROM SYSDB,GPU,CPU,RAM
+        WHERE (SYSDB.GPUID = GPU.ID AND SYSDB.CPUID = CPU.ID AND SYSDB.RAMID = RAM.ID AND SYSDB.USERID = %s)"""
+        cursor.execute(query,(uid,))
+        arr = cursor.fetchone()
+        return arr
+
+def getcpu():
+    with dbapi2._connect(current_app.config['dsn']) as connection:
+        cursor = connection.cursor()
+        query = """ SELECT NAME,ID FROM CPU ORDER BY NAME """
+        cursor.execute(query)
+        arr = cursor.fetchall()
+        return arr
+
+def getgpu():
+    with dbapi2._connect(current_app.config['dsn']) as connection:
+        cursor = connection.cursor()
+        query = """ SELECT NAME,ID FROM GPU ORDER BY NAME"""
+        cursor.execute(query)
+        arr = cursor.fetchall()
+        return arr
+
+def getram():
+    with dbapi2._connect(current_app.config['dsn']) as connection:
+        cursor = connection.cursor()
+        query = """ SELECT NAME,ID FROM RAM ORDER BY NAME"""
+        cursor.execute(query)
+        arr = cursor.fetchall()
+        return arr
 
 
 @link3.route('/edit')

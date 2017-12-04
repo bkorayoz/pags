@@ -23,24 +23,19 @@ igdbkey = "e2bc1782f5f9845a007d5a7398da2cf6"
 
 gamecategory = ["Main Game", "DLC/Addon", "Expansion", "Bundle","Standalone Expansion"]
 gamestatus = ["Released","Alpha","Beta","Early Access","Offline","Cancelled"]
+gamegenre = [{"id":2,"name":"Point-and-click"},{"id":4,"name":"Fighting"},{"id":5,"name":"Shooter"},{"id":7,"name":"Music"},{"id":8,"name":"Platform"},{"id":9,"name":"Puzzle"},{"id":10,"name":"Racing"},{"id":11,"name":"Real Time Strategy (RTS)"},{"id":12,"name":"Role-playing (RPG)"},{"id":13,"name":"Simulator"},{"id":14,"name":"Sport"},{"id":15,"name":"Strategy"},{"id":16,"name":"Turn-based strategy (TBS)"},{"id":24,"name":"Tactical"},{"id":25,"name":"Hack and slash/Beat 'em up"},{"id":26,"name":"Quiz/Trivia"},{"id":30,"name":"Pinball"},{"id":31,"name":"Adventure"},{"id":32,"name":"Indie"},{"id":33,"name":"Arcade"}]
 debate_games = "https://www.game-debate.com/game/api/list"
 
 debate_ex = "https://www.game-debate.com/games/index.php?g_id=1164"
 
 @link1.route('/')
 def home_page():
-    r = requests.get(debate_ex)
-    file = open("games.txt","w")
-    file.write(r.text)
-    file.close()
-
 
     # req = Request('https://www.game-debate.com/system-requirement-js-widget/script?domain=localhost:5000&p_id=640&gc_id=463')
     # webpage = urlopen(req).read()
     #
     # print(str(webpage))
-    # ig = igdb(igdbkey)
-    # t = ig.platforms({'search': 'windows', 'fields': ['name']} ).text
+
     #res = list(t['games'])
     #res_json = json.dumps(res)
     # ig = igdb("e2bc1782f5f9845a007d5a7398da2cf6")
@@ -122,20 +117,11 @@ def search():
         flash("Unauthorized Access")
         return redirect(url_for('link1.home_page'))
 
-# def get_clubs():
-#     with dbapi2.connect(current_app.config['dsn']) as connection:
-#         cursor = connection.cursor()
-#         query = """ SELECT ID, NAME, TYPE FROM CLUBDB WHERE (ACTIVE = 1) """
-#         cursor.execute(query)
-#         arr = cursor.fetchall()
-#         return arr
-#
 def checkusername(name):
     with dbapi2.connect(current_app.config['dsn']) as connection:
         cursor = connection.cursor()
         query = """ SELECT COUNT(*) FROM USERDB WHERE (NAME = %s) """
         count = cursor.execute(query,(name,))
-        print(count)
         if cursor.fetchone()[0] == 0:
             return True
         else:
@@ -177,7 +163,6 @@ def igdb_with_name(gamename):
     i = 0
     while i < len(result):
         try:
-            print(result[i]['name'] + " -- " + str(result[i]['platforms']))
             if not 6 in result[i]['platforms'] or 13 in result[i]['platforms']: # 3 linux, 6 pc-windows, 13 pc-dos, 14 mac
                 del result[i]
                 i -= 1
@@ -187,6 +172,12 @@ def igdb_with_name(gamename):
         i+=1
     for r in result:
         r['category'] = gamecategory[r['category']]
+        i = 0
+        for g in r['genres']:
+            for gn in gamegenre:
+                if g==gn['id']:
+                    r['genres'][i] = gn['name']
+            i += 1
         try:
             r['rating'] = round(r['rating'],2)
         except:
