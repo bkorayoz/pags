@@ -31,6 +31,10 @@ debate_ex = "https://www.game-debate.com/games/index.php?g_id=1164"
 @link1.route('/')
 def home_page():
 
+    # file = open("games.txt","w")
+    # r = requests.get("http://conquista.yandex.com/yandsearch?text=4700mq[&how=tm]").text
+    # file.write(r)
+    # file.close()
     # req = Request('https://www.game-debate.com/system-requirement-js-widget/script?domain=localhost:5000&p_id=640&gc_id=463')
     # webpage = urlopen(req).read()
     #
@@ -52,6 +56,11 @@ def is_safe_url(target):
     test_url = urlparse(urljoin(request.host_url, target))
     return test_url.scheme in ('http', 'https') and \
            ref_url.netloc == test_url.netloc
+
+def search_cpu(name):
+    str = "https://www.google.com.tr/search?hl=tr&as_q=" + name + "&as_sitesearch=cpubenchmark.net"
+    r = requests.get(str).text
+    return r
 
 @link1.route('/login', methods = ['GET', 'POST'])
 def login():
