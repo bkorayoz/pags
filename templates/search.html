@@ -9,7 +9,7 @@
 <table class="w3-table-all w3-hoverable w3-centered">
 <thead>
 <tr  class ="w3-orange">
-  <th><strong></strong></th>
+  <th><strong><i class="fa fa-picture-o" aria-hidden="true"></i></strong></th>
 <th><strong>Name</strong></th>
 <th><strong>Genre</strong></th>
 <th><strong> IGDB Rating</strong></th>
@@ -21,10 +21,8 @@
 <td style="vertical-align: middle"><a href="{{r['url']}}" style="display:block;">{% if r['screenshots'] %} <img src=" {{r['screenshots'][0]['url']}}">{% else %}<img  height="90" width="90" src="https://vignette3.wikia.nocookie.net/shokugekinosoma/images/6/60/No_Image_Available.png">{% endif %}</a></td>
 <td style="vertical-align: middle"><a href="{{r['url']}}" style="display:block;"><strong style="color:#E88E0C"><div class="w3-container w3-text-orange w3-hover-text-white">{{r['name']}}</div></strong> {% if r['release_dates'] %} ({{r['release_dates'][0]['y']}}) {% endif %}</a> </td>
 <td style="vertical-align: middle"><a href="{{r['url']}}" style="display:block;">{% for g in r['genres'] %} {{g}}<br> {% endfor %}</a> </td>
-<!-- <td><a href="{{r['url']}}" style="display:block;">{% for g in r['genres'] %} {{g['name']}} {% endfor %}</a> </td> -->
-<td style="vertical-align: middle"><a href="{{r['url']}}" style="display:block;"> {% if r['rating'] %}{{r['rating']}} {% endif %}</a> </td>
+<td style="vertical-align: middle"><a href="{{r['url']}}" style="display:block;"> {% if r['rating'] %}{{r['rating']}}{% else %} N/A {% endif %}</a> </td>
 <td style="vertical-align: middle"><a href="{{r['url']}}" style="display:block;"> {{r['category']}} </a> </td>
-<!-- <td>{{r}} </td> -->
 </tr>
 {% endfor %}
 </table>

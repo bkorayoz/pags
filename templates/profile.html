@@ -18,9 +18,13 @@
   <li><span class="fa fa-at" style="color:#E88E0C" aria-hidden="true"></span>&nbsp;{{current_user.email}}</li>
 
   <li>
+  {% if specs %}
   <strong style="color:#E88E0C">CPU: </strong>{{specs[0]}}<br>
   <strong style="color:#E88E0C">GPU: </strong>{{specs[1]}}<br>
   <strong style="color:#E88E0C">RAM: </strong>{{specs[2]}}
+  {% else %}
+  <span class="fa fa-frown-o" style="color:#E88E0C" aria-hidden="true"></span>&nbsp;No system information! Please configure it.
+  {% endif %}
   </li>
 </ul>
 

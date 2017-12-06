@@ -71,8 +71,7 @@ def initialize_database():
             cursor.execute(query)
 
             query = """CREATE TABLE RAM (ID SERIAL PRIMARY KEY,
-            NAME VARCHAR(60) NOT NULL,
-            SCORE FLOAT, RANKING INT) """
+            SIZE VARCHAR(20) NOT NULL)"""
             cursor.execute(query)
 
             query = """DROP TABLE IF EXISTS SYSDB CASCADE"""

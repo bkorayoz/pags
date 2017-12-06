@@ -39,13 +39,9 @@ def SystemRequirementsChecker():
                 cursor.execute(query, (name, score, ranking))
             connection.commit()
 
-        with open('RAM_UserBenchmarks.csv', newline='') as ramfile:
-            ram_index = csv.reader(ramfile, delimiter=',', quotechar='|')
             cursor = connection.cursor()
-            query = "INSERT INTO RAM (NAME, SCORE, RANKING) VALUES (%s, %s, %s)"
+            ram_index = ["1 GB","2 GB","4 GB","8 GB","16 GB","32 GB","64 GB"]
+            query = "INSERT INTO RAM (SIZE) VALUES (%s)"
             for ram in ram_index:
-                name = ram[2] + ' ' + ram[3]
-                score = ram[5]
-                ranking = ram[4]
-                cursor.execute(query, (name, score, ranking))
+                cursor.execute(query, (ram,))
             connection.commit()

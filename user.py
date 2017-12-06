@@ -50,7 +50,7 @@ def savehw():
             cursor.execute(query,(g,))
             gid = cursor.fetchone()[0]
 
-            query = """ SELECT ID FROM RAM WHERE (NAME = %s) """
+            query = """ SELECT ID FROM RAM WHERE (SIZE = %s) """
             cursor.execute(query,(r,))
             rid = cursor.fetchone()[0]
 
@@ -71,7 +71,7 @@ def getspecs():
     uid = User(current_user.name,"zzz", "zzz").get_id()[0]
     with dbapi2._connect(current_app.config['dsn']) as connection:
         cursor = connection.cursor()
-        query = """ SELECT CPU.NAME,GPU.NAME,RAM.NAME FROM SYSDB,GPU,CPU,RAM
+        query = """ SELECT CPU.NAME,GPU.NAME,RAM.SIZE FROM SYSDB,GPU,CPU,RAM
         WHERE (SYSDB.GPUID = GPU.ID AND SYSDB.CPUID = CPU.ID AND SYSDB.RAMID = RAM.ID AND SYSDB.USERID = %s)"""
         cursor.execute(query,(uid,))
         arr = cursor.fetchone()
@@ -96,7 +96,7 @@ def getgpu():
 def getram():
     with dbapi2._connect(current_app.config['dsn']) as connection:
         cursor = connection.cursor()
-        query = """ SELECT NAME,ID FROM RAM ORDER BY NAME"""
+        query = """ SELECT SIZE,ID FROM RAM"""
         cursor.execute(query)
         arr = cursor.fetchall()
         return arr
