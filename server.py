@@ -5,6 +5,7 @@ import re
 import psycopg2 as dbapi2
 from home import link1
 from user import link3
+from message import link4
 from flask import redirect
 from flask.helpers import url_for
 from flask import Flask, flash
@@ -20,6 +21,7 @@ from system_requirements_checker import SystemRequirementsChecker
 app = Flask(__name__)
 app.register_blueprint(link1)
 app.register_blueprint(link3)
+app.register_blueprint(link4)
 app.secret_key = 'gallifrey'
 login_manager = LoginManager()
 login_manager.init_app(app)
