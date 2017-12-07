@@ -18,7 +18,7 @@ link1 = Blueprint('link1',__name__)
 from urllib.request import Request, urlopen
 import http.client
 import requests
-
+from html.parser import HTMLParser
 igdbkey = "e2bc1782f5f9845a007d5a7398da2cf6"
 
 gamecategory = ["Main Game", "DLC/Addon", "Expansion", "Bundle","Standalone Expansion"]
@@ -47,7 +47,7 @@ def home_page():
     # print("------")
     # print(search_cpu("amd a10-7700k apu r7 graphics"))
     # print(search_gpu("1080 ti"))
-    print(search_cpu("i9-7980XE"))
+    print(search_hw("i9-7980XE"))
 
     return render_template('home.html')
 
@@ -70,44 +70,31 @@ def remove_html_markup(s):
                 quote = not quote
             elif not tag:
                 out = out + c
+
     return out
 
-def search_cpu(name):
-    str = "https://www.google.com.tr/search?hl=tr&as_q=" + name + "&as_sitesearch=cpubenchmark.net"
+def search_hw(name):
+    str = "https://www.passmark.com/search/zoomsearch.php?zoom_query=" + name + "&search.x=0&search.y=0"
     try:
         r = requests.get(str).text
     except:
         return "REQUEST ERROR"
     r = remove_html_markup(r)
-    #print(r)
-    index = r.find("PassMark -")
-    if index == -1:
-        print(r)
-        return "NOT FOUND"
-    index2 = r.find("- ",index+11)
-    if index2 == 1:
+    h = HTMLParser()
+    r = h.unescape(r)
+    index2 = r.find("- Price")
+    if index2 == -1:
         index2 = len(r)
-    return r[index+11:index2-1]
 
-def search_gpu(name):
-    open_index = name.find("(")
-    close_index = name.find(")")
-    name = name[0:open_index] + name[close_index+1:]
-    print(name)
-    str = "https://www.google.com.tr/search?hl=tr&as_q=" + name + "&as_sitesearch=videocardbenchmark.net"
-    try:
-        r = requests.get(str).text
-    except:
-        return "REQUEST ERROR"
-    r = remove_html_markup(r)
-    #print(r)
-    index = r.find("PassMark -")
+    index = r.rfind("PassMark -",0,index2)
     if index == -1:
-        return "NOT FOUND"
-    index2 = r.find("- ",index+11)
-    if index2 == 1:
-        index2 = len(r)
-    return r[index+11:index2-1]
+        return name + "NOT FOUND!"
+    ret = r[index+11:index2-1]
+
+    if len(ret) > 50:
+        return name + "NOT FOUND!"
+    return ret
+
 
 
 @link1.route('/login', methods = ['GET', 'POST'])
