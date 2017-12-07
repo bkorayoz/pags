@@ -11,6 +11,9 @@ from flask import request, current_app
 from passlib.apps import custom_app_context as pwd_context
 from flask_login.utils import login_required
 from flask_login import login_manager, login_user, logout_user,current_user
+from fetch_game_requirements import fetch_requirements
+import system_requirements_checker
+from home import search_hw
 
 link4 = Blueprint('link4',__name__)
 
@@ -42,4 +45,56 @@ def sysinfoget():
         cursor.execute(query,(uid, gpuid, cpuid, ramid,ostype))
     return 
 
+@link4.route('/gameReqGet/<gameName>')
+def gameReqGet(gameName):
+    print(gameName)
+    rawRequirements = fetch_requirements(gameName)
+    requirements = {'Minimum': {
+                                 'CPU': {
+                                          'Intel': hwNametoId(search_hw(eraseFromString(rawRequirements['Minimum']['CPU']['Intel'], '(', ')'))),
+                                          'AMD': hwNametoId(search_hw(eraseFromString(rawRequirements['Minimum']['CPU']['AMD'], '(', ')')))
+                                        },
+                                 'GPU': {
+                                          'Nvidia': '0',
+                                          'AMD': '0'
+                                        },
+                                 'RAM': 0
+                               },
+                    # 'Recommended': {
+                    #                  'CPU': {
+                    #                           'Intel': hwNametoId(search_hw(eraseFromString(rawRequirements['Minimum']['CPU']['Intel'], '(', ')')), 'CPU'),
+                    #                           'AMD': hwNametoId(search_hw(eraseFromString(rawRequirements['Minimum']['CPU']['AMD'], '(', ')')), 'CPU')
+                    #                         },
+                    #                  'GPU': {
+                    #                           'Nvidia': '0',
+                    #                           'AMD': '0'
+                    #                         },
+                    #                  'RAM': '0'
+                    #                }
+                   }
+    print(str(requirements))
+    return
+
+def eraseFromString(term, deliminator1, deliminator2):
+    tag = False
+    out = ""
+    for c in term:
+            if c == deliminator1:
+                tag = True
+            elif c == deliminator2:
+                tag = False
+            elif not tag:
+                out = out + c
+    return out
+
+def hwNametoId(name):
+    with dbapi2.connect(current_app.config['dsn']) as connection:
+        cursor = connection.cursor()
+        query = """SELECT ID FROM CPU WHERE (SEARCHTERM = %s)"""
+        cursor.execute(query, (name,))
+        hw_id = cursor.fetchone()[0]
+    if hw_id:
+        return hw_id
+    else:
+        return '0'
 #def eraseParantez(input):
