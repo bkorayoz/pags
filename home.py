@@ -30,25 +30,25 @@ debate_ex = "https://www.game-debate.com/games/index.php?g_id=1164"
 
 @link1.route('/')
 def home_page():
+    # print("------")
+    # print(search_cpu("intel(r) core(tm) i5-3427u cpu @ 1.80ghz"))
+    # print(search_cpu("intel core i5-3427u"))
+    # print(search_cpu("intel celeron m processor 1.50ghz"))
+    # print(search_cpu("intel core2 duo e4500"))
+    # print(search_cpu("AMD Athlon 64 3000+"))
+    # print(search_cpu("athlon 3000+"))
+    # print(search_cpu("amd ryzen tr 1900x"))
+    # print("------origins intel")
+    # print(search_cpu("Intel Core i5-2400S 2.5GHz"))
+    # print(search_cpu("Core i5-2400S"))
+    # print("------origins amd")
+    # print(search_cpu("FX-6350")) # amd
+    # print(search_cpu("AMD FX-6350 Six-Core")) # amd
+    # print("------")
+    # print(search_cpu("amd a10-7700k apu r7 graphics"))
+    # print(search_gpu("1080 ti"))
+    print(search_cpu("i9-7980XE"))
 
-    # file = open("games.txt","w")
-    # r = requests.get("http://conquista.yandex.com/yandsearch?text=4700mq[&how=tm]").text
-    # file.write(r)
-    # file.close()
-    # req = Request('https://www.game-debate.com/system-requirement-js-widget/script?domain=localhost:5000&p_id=640&gc_id=463')
-    # webpage = urlopen(req).read()
-    #
-    # print(str(webpage))
-
-    #res = list(t['games'])
-    #res_json = json.dumps(res)
-    # ig = igdb("e2bc1782f5f9845a007d5a7398da2cf6")
-
-    # arr = range(999)
-    # result = ig.games({'ids':arr}).body
-    # file = open("games.txt","w")
-    # file.write(str(t))
-    # file.close()
     return render_template('home.html')
 
 def is_safe_url(target):
@@ -57,10 +57,58 @@ def is_safe_url(target):
     return test_url.scheme in ('http', 'https') and \
            ref_url.netloc == test_url.netloc
 
+def remove_html_markup(s):
+    tag = False
+    quote = False
+    out = ""
+    for c in s:
+            if c == '<' and not quote:
+                tag = True
+            elif c == '>' and not quote:
+                tag = False
+            elif (c == '"' or c == "'") and tag:
+                quote = not quote
+            elif not tag:
+                out = out + c
+    return out
+
 def search_cpu(name):
     str = "https://www.google.com.tr/search?hl=tr&as_q=" + name + "&as_sitesearch=cpubenchmark.net"
-    r = requests.get(str).text
-    return r
+    try:
+        r = requests.get(str).text
+    except:
+        return "REQUEST ERROR"
+    r = remove_html_markup(r)
+    #print(r)
+    index = r.find("PassMark -")
+    if index == -1:
+        print(r)
+        return "NOT FOUND"
+    index2 = r.find("- ",index+11)
+    if index2 == 1:
+        index2 = len(r)
+    return r[index+11:index2-1]
+
+def search_gpu(name):
+    open_index = name.find("(")
+    close_index = name.find(")")
+    name = name[0:open_index] + name[close_index+1:]
+    print(name)
+    str = "https://www.google.com.tr/search?hl=tr&as_q=" + name + "&as_sitesearch=videocardbenchmark.net"
+    try:
+        r = requests.get(str).text
+    except:
+        return "REQUEST ERROR"
+    r = remove_html_markup(r)
+    #print(r)
+    index = r.find("PassMark -")
+    if index == -1:
+        return "NOT FOUND"
+    index2 = r.find("- ",index+11)
+    if index2 == 1:
+        index2 = len(r)
+    return r[index+11:index2-1]
+
 
 @link1.route('/login', methods = ['GET', 'POST'])
 def login():

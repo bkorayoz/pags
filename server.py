@@ -59,20 +59,20 @@ def initialize_database():
             query = """CREATE TABLE USERDB (ID SERIAL PRIMARY KEY,
             NAME VARCHAR(40) NOT NULL,
             EMAIL VARCHAR(50), PSW VARCHAR(200)) """
-            cursor.execute(query)            
+            cursor.execute(query)
 
             query = """DROP TABLE IF EXISTS GPU CASCADE"""
             cursor.execute(query)
 
             query = """CREATE TABLE GPU (ID SERIAL PRIMARY KEY,
-            NAME VARCHAR(60) NOT NULL,
+            NAME VARCHAR(60) NOT NULL,SEARCHTERM VARCHAR(60),
             SCORE FLOAT, RANKING INT) """
             cursor.execute(query)
 
             query = """DROP TABLE IF EXISTS CPU CASCADE"""
             cursor.execute(query)
             query = """CREATE TABLE CPU (ID SERIAL PRIMARY KEY,
-            NAME VARCHAR(60) NOT NULL,
+            NAME VARCHAR(60) NOT NULL,SEARCHTERM VARCHAR(60),
             SCORE FLOAT, RANKING INT) """
             cursor.execute(query)
 
@@ -89,10 +89,6 @@ def initialize_database():
             query = """CREATE TABLE SYSDB (USERID  INT REFERENCES USERDB(ID) PRIMARY KEY, GPUID INT REFERENCES GPU(ID),
             CPUID INT REFERENCES CPU(ID), RAMID INT REFERENCES RAM(ID), OSNAME VARCHAR(30))"""
             cursor.execute(query)
-
-
-
-
 
             query = """DROP TABLE IF EXISTS USERREC CASCADE"""
             cursor.execute(query)
