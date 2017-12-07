@@ -54,6 +54,13 @@ def initialize_database():
         with dbapi2.connect(app.config['dsn']) as connection:
             cursor = connection.cursor()
 
+            query = """DROP TABLE IF EXISTS USERDB CASCADE"""
+            cursor.execute(query)
+            query = """CREATE TABLE USERDB (ID SERIAL PRIMARY KEY,
+            NAME VARCHAR(40) NOT NULL,
+            EMAIL VARCHAR(50), PSW VARCHAR(200)) """
+            cursor.execute(query)            
+
             query = """DROP TABLE IF EXISTS GPU CASCADE"""
             cursor.execute(query)
 
@@ -83,12 +90,7 @@ def initialize_database():
             CPUID INT REFERENCES CPU(ID), RAMID INT REFERENCES RAM(ID), OSNAME VARCHAR(30))"""
             cursor.execute(query)
 
-            query = """DROP TABLE IF EXISTS USERDB CASCADE"""
-            cursor.execute(query)
-            query = """CREATE TABLE USERDB (ID SERIAL PRIMARY KEY,
-            NAME VARCHAR(40) NOT NULL,
-            EMAIL VARCHAR(50), PSW VARCHAR(200)) """
-            cursor.execute(query)
+
 
 
 
