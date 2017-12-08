@@ -76,14 +76,14 @@ def fetch_requirements(title):
     # split1 = split0[1].split('</span>', 1)
     # recommended_ram = split1[0]
 
-    if 'GHz' in minimum_intel_cpu or 'MHz' in minimum_intel_cpu:
-        minimum_intel_cpu = minimum_intel_cpu.rsplit(' ', 1)[0]
-#    print(minimum_intel_cpu)
-    # if 'GHz' in recommended_intel_cpu or 'MHz' in recommended_intel_cpu:
-    #     recommended_intel_cpu = recommended_intel_cpu.rsplit(' ', 1)[0]
-#    print(recommended_intel_cpu)
-    if 'GHz' in minimum_amd_cpu or 'MHz' in minimum_amd_cpu:
-        minimum_amd_cpu = minimum_amd_cpu.rsplit(' ', 1)[0]
+#     if 'GHz' in minimum_intel_cpu or 'MHz' in minimum_intel_cpu:
+#         minimum_intel_cpu = minimum_intel_cpu.rsplit(' ', 1)[0]
+# #    print(minimum_intel_cpu)
+#     # if 'GHz' in recommended_intel_cpu or 'MHz' in recommended_intel_cpu:
+#     #     recommended_intel_cpu = recommended_intel_cpu.rsplit(' ', 1)[0]
+# #    print(recommended_intel_cpu)
+#     if 'GHz' in minimum_amd_cpu or 'MHz' in minimum_amd_cpu:
+#         minimum_amd_cpu = minimum_amd_cpu.rsplit(' ', 1)[0]
 #    print(minimum_amd_cpu)
     # if 'GHz' in recommended_amd_cpu or 'MHz' in recommended_amd_cpu:
     #     recommended_amd_cpu = recommended_amd_cpu.rsplit(' ', 1)[0]

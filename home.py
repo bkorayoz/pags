@@ -52,7 +52,7 @@ def home_page():
     # print("------")
     # print(search_cpu("amd a10-7700k apu r7 graphics"))
 
-    print(search_gpu("1080 ti"))
+    # print(search_gpu("Pentium 4 3.00GHz"))
     return render_template('home.html')
 
 def is_safe_url(target):
