@@ -12,8 +12,7 @@ from passlib.apps import custom_app_context as pwd_context
 from flask_login.utils import login_required
 from flask_login import login_manager, login_user, logout_user,current_user
 from fetch_game_requirements import fetch_requirements
-import system_requirements_checker
-from home import search_hw
+from home import search_cpu
 
 link4 = Blueprint('link4',__name__)
 
@@ -43,7 +42,7 @@ def sysinfoget():
         cursor = connection.cursor()
         query = "INSERT INTO SYSDB (USERID, GPUID, CPUID, RAMID, OSNAME) VALUES (%s, %s, %s, %s, %s)"
         cursor.execute(query,(uid, gpuid, cpuid, ramid,ostype))
-    return 
+    return
 
 @link4.route('/gameReqGet/<gameName>')
 def gameReqGet(gameName):

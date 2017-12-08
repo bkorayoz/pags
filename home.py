@@ -1,9 +1,12 @@
+
 import datetime
 import os
 import json
 import re
+import csv
 import psycopg2 as dbapi2
 from flask import redirect, Blueprint, flash
+link1 = Blueprint('link1',__name__)
 from flask.helpers import url_for
 from flask import Flask
 from flask import render_template, Response
@@ -14,11 +17,12 @@ from flask_login import login_manager, login_user, logout_user, confirm_login,cu
 from urllib.parse import urlparse, urljoin
 from classes import UserList,User
 from igdb_api_python.igdb import igdb
-link1 = Blueprint('link1',__name__)
 from urllib.request import Request, urlopen
 import http.client
 import requests
 from html.parser import HTMLParser
+
+
 igdbkey = "e2bc1782f5f9845a007d5a7398da2cf6"
 
 gamecategory = ["Main Game", "DLC/Addon", "Expansion", "Bundle","Standalone Expansion"]
@@ -30,6 +34,7 @@ debate_ex = "https://www.game-debate.com/games/index.php?g_id=1164"
 
 @link1.route('/')
 def home_page():
+    
     # print("------")
     # print(search_cpu("intel(r) core(tm) i5-3427u cpu @ 1.80ghz"))
     # print(search_cpu("intel core i5-3427u"))
@@ -46,9 +51,8 @@ def home_page():
     # print(search_cpu("AMD FX-6350 Six-Core")) # amd
     # print("------")
     # print(search_cpu("amd a10-7700k apu r7 graphics"))
-    # print(search_gpu("1080 ti"))
-    print(search_hw("i9-7980XE"))
 
+    print(search_gpu("1080 ti"))
     return render_template('home.html')
 
 def is_safe_url(target):
@@ -73,7 +77,19 @@ def remove_html_markup(s):
 
     return out
 
-def search_hw(name):
+def eraseFromString(term, deliminator1, deliminator2):
+    tag = False
+    out = ""
+    for c in term:
+            if c == deliminator1:
+                tag = True
+            elif c == deliminator2:
+                tag = False
+            elif not tag:
+                out = out + c
+    return out
+
+def search_cpu(name):
     str = "https://www.passmark.com/search/zoomsearch.php?zoom_query=" + name + "&search.x=0&search.y=0"
     try:
         r = requests.get(str).text
@@ -88,14 +104,61 @@ def search_hw(name):
 
     index = r.rfind("PassMark -",0,index2)
     if index == -1:
-        return name + "NOT FOUND!"
+        return "NOT FOUND"
     ret = r[index+11:index2-1]
 
     if len(ret) > 50:
-        return name + "NOT FOUND!"
+        return name + "NOT FOUND"
     return ret
 
+def search_gpu(name):
+    index = name.find("GB")
+    if index == -1:
+        pass
+    else:
+        name = name[0:index-2]
 
+    name = name.lower()
+    name = name.replace("asus","")
+    name = name.replace("nvidia","")
+    name = name.replace("msi","")
+    name = name.replace("gigabyte","")
+    name = name.replace("pascal","")
+    name = name.replace("evga","")
+    name = name.replace("sapphire","")
+    name = name.replace("zotac","")
+    name = name.replace("amd","")
+    name = name.replace("frontier edition","")
+    name = name.replace("gainward","")
+    name = name.replace("xfx","")
+    name = name.replace("powercolor","")
+    name = name.replace("intel","")
+    name = name.replace("pro hd","")
+    name = name.replace("graphics","")
+    name = name.replace("ati","")
+    name = eraseFromString(name,"(",")")
+    name = name.replace("  "," ")
+    str = "https://www.passmark.com/search/zoomsearch.php?zoom_query=" + name + " price performance"
+    try:
+        r = requests.get(str).text
+    except:
+        return "REQUEST ERROR"
+
+    r = remove_html_markup(r)
+    h = HTMLParser()
+    r = h.unescape(r)
+    index2 = r.find("- Price")
+    if index2 == -1:
+        index2 = len(r)
+
+    index = r.rfind("PassMark -",0,index2)
+    if index == -1:
+        return "NOT FOUND"
+    ret = r[index+11:index2-1]
+
+    if len(ret) > 50:
+        return name + "NOT FOUND"
+    return ret
 
 @link1.route('/login', methods = ['GET', 'POST'])
 def login():
