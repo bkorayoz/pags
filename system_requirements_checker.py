@@ -44,8 +44,6 @@ def SystemRequirementsChecker():
                 gpu_searchterm.append("NF")
 
 
-
-
     with dbapi2.connect(current_app.config['dsn']) as connection:
         with open('CPU_UserBenchmarks.csv', newline='') as cpufile:
             cpu_index = csv.reader(cpufile, delimiter=',', quotechar='|')

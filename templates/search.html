@@ -18,10 +18,10 @@
 </thead>
 {% for r in result %}
 <tr>
-<td style="vertical-align: middle"><a href="{{r['url']}}" style="display:block;">{% if r['screenshots'] %} <img src=" {{r['screenshots'][0]['url']}}">{% else %}<img  height="90" width="90" src="https://vignette3.wikia.nocookie.net/shokugekinosoma/images/6/60/No_Image_Available.png">{% endif %}</a></td>
+<td style="vertical-align: middle"><a href="{{r['url']}}" style="display:block;">{% if r['cover'] %} <img src=" {{r['cover']['url']}}">{% else %}<img  height="90" width="90" src="https://vignette3.wikia.nocookie.net/shokugekinosoma/images/6/60/No_Image_Available.png">{% endif %}</a></td>
 <td style="vertical-align: middle"><a href="{{r['url']}}" style="display:block;"><strong style="color:#E88E0C"><div class="w3-container w3-text-orange w3-hover-text-white">{{r['name']}}</div></strong> {% if r['release_dates'] %} ({{r['release_dates'][0]['y']}}) {% endif %}</a> </td>
-<td style="vertical-align: middle"><a href="{{r['url']}}" style="display:block;">{% for g in r['genres'] %} {{g}}<br> {% endfor %}</a> </td>
-<td style="vertical-align: middle"><a href="{{r['url']}}" style="display:block;"> {% if r['rating'] %}{{r['rating']}}{% else %} N/A {% endif %}</a> </td>
+<td style="vertical-align: middle"><a href="{{r['url']}}" style="display:block;">{% if r['genres'] %} {% for g in r['genres'] %} {{g}} <br> {% endfor %} {% endif %}</a> </td>
+<td style="vertical-align: middle"><a href="{{r['url']}}" style="display:block;"> {% if r['total_rating'] %}{{r['total_rating']}}{% else %} N/A {% endif %}</a> </td>
 <td style="vertical-align: middle"><a href="{{r['url']}}" style="display:block;"> {{r['category']}} </a> </td>
 </tr>
 {% endfor %}

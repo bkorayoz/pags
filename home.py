@@ -280,13 +280,16 @@ def igdb_with_name(gamename):
     for r in result:
         r['category'] = gamecategory[r['category']]
         i = 0
-        for g in r['genres']:
-            for gn in gamegenre:
-                if g==gn['id']:
-                    r['genres'][i] = gn['name']
-            i += 1
         try:
-            r['rating'] = round(r['rating'],2)
+            for g in r['genres']:
+                for gn in gamegenre:
+                    if g==gn['id']:
+                        r['genres'][i] = gn['name']
+                i += 1
+        except:
+            pass
+        try:
+            r['total_rating'] = round(r['total_rating'],2)
         except:
             pass
 
