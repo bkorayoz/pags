@@ -22,7 +22,10 @@ def SystemRequirementsChecker():
         for cpu in cpu_index:
             st = cpu[2]
             ind = st.find("NOT FOUND")
-            if ind == -1:
+            ind2 = st.find("search")
+            if ind2 != -1:
+                pass
+            elif ind == -1:
                 cpu_searchterm.append(st)
             else:
                 cpu_searchterm.append("NF")
@@ -32,7 +35,10 @@ def SystemRequirementsChecker():
         for gpu in gpu_index:
             st = gpu[2]
             ind = st.find("NOT FOUND")
-            if ind == -1:
+            ind2 = st.find("search")
+            if ind2 != -1:
+                pass
+            elif ind == -1:
                 gpu_searchterm.append(st)
             else:
                 gpu_searchterm.append("NF")
