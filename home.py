@@ -34,7 +34,7 @@ debate_ex = "https://www.game-debate.com/games/index.php?g_id=1164"
 
 @link1.route('/')
 def home_page():
-    
+
     # print("------")
     # print(search_cpu("intel(r) core(tm) i5-3427u cpu @ 1.80ghz"))
     # print(search_cpu("intel core i5-3427u"))
@@ -94,7 +94,7 @@ def search_cpu(name):
     try:
         r = requests.get(str).text
     except:
-        return "REQUEST ERROR"
+        return "RE"
     r = remove_html_markup(r)
     h = HTMLParser()
     r = h.unescape(r)
@@ -104,11 +104,11 @@ def search_cpu(name):
 
     index = r.rfind("PassMark -",0,index2)
     if index == -1:
-        return "NOT FOUND"
+        return "NF"
     ret = r[index+11:index2-1]
 
     if len(ret) > 50:
-        return name + "NOT FOUND"
+        return "NF"
     return ret
 
 def search_gpu(name):
@@ -142,7 +142,7 @@ def search_gpu(name):
     try:
         r = requests.get(str).text
     except:
-        return "REQUEST ERROR"
+        return "RE"
 
     r = remove_html_markup(r)
     h = HTMLParser()
@@ -153,11 +153,11 @@ def search_gpu(name):
 
     index = r.rfind("PassMark -",0,index2)
     if index == -1:
-        return "NOT FOUND"
+        return "NF"
     ret = r[index+11:index2-1]
 
     if len(ret) > 50:
-        return name + "NOT FOUND"
+        return "NF"
     return ret
 
 @link1.route('/login', methods = ['GET', 'POST'])
