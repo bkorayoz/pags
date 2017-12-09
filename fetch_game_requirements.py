@@ -15,62 +15,65 @@ dsn = """user='vagrant' password='vagrant' host='localhost' port=5432 dbname='pa
 
 def fetch_requirements(title):
     r = requests.get("https://www.game-debate.com/game/api/list").json()
-    print("title: " + title)
-    game_id = (next((item for item in r if item["g_title"] == title))['g_id'])
+
+    game_dict = next((item for item in r if item["g_title"] == title), False)
+    if game_dict is False:
+        return False
+    game_id = game_dict['g_id']
     print("game_id: " + game_id)
     game_page = requests.get("https://www.game-debate.com/games/index.php?g_id=" + game_id).text
-    
+
     game_page = game_page.splitlines()
-    
+
     minimum_cpu_line = [line for line in game_page if "Minimum processor requirement" in line]
     minimum_intel_cpu_line = game_page[game_page.index(minimum_cpu_line[0])+3]
     split0 = minimum_intel_cpu_line.split('&cpu=', 1)
     split1 = split0[1].split('" title="', 1)
     minimum_intel_cpu = split1[0]
-    
+
     minimum_amd_cpu_line = game_page[game_page.index(minimum_cpu_line[0])+5]
     split0 = minimum_amd_cpu_line.split('&cpu=', 1)
     split1 = split0[1].split('" title="', 1)
     minimum_amd_cpu = split1[0]
-    
+
     # recommended_cpu_line = [line for line in game_page if "Recommended processor requirement" in line]
     # recommended_intel_cpu_line = game_page[game_page.index(recommended_cpu_line[0])+3]
     # split0 = recommended_intel_cpu_line.split('&cpu=', 1)
     # split1 = split0[1].split('" title="', 1)
     # recommended_intel_cpu = split1[0]
-    
+
     # recommended_amd_cpu_line = game_page[game_page.index(recommended_cpu_line[0])+5]
     # split0 = recommended_amd_cpu_line.split('&cpu=', 1)
     # split1 = split0[1].split('" title="', 1)
     # recommended_amd_cpu = split1[0]
-    
+
     minimum_gpu_line = [line for line in game_page if "Minimum graphic card requirement" in line]
     minimum_nvidia_gpu_line = game_page[game_page.index(minimum_gpu_line[0])+3]
     split0 = minimum_nvidia_gpu_line.split('&graphics=', 1)
     split1 = split0[1].split('" title="', 1)
     minimum_nvidia_gpu = split1[0]
-    
+
     minimum_amd_gpu_line = game_page[game_page.index(minimum_gpu_line[0])+5]
     split0 = minimum_amd_gpu_line.split('&graphics=', 1)
     split1 = split0[1].split('" title="', 1)
     minimum_amd_gpu = split1[0]
-    
+
     # recommended_gpu_line = [line for line in game_page if "Recommended graphic card requirement" in line]
     # recommended_nvidia_gpu_line = game_page[game_page.index(recommended_gpu_line[0])+3]
     # split0 = recommended_nvidia_gpu_line.split('&graphics=', 1)
     # split1 = split0[1].split('" title="', 1)
     # recommended_nvidia_gpu = split1[0]
-    
+
     # recommended_amd_gpu_line = game_page[game_page.index(recommended_gpu_line[0])+5]
     # split0 = recommended_amd_gpu_line.split('&graphics=', 1)
     # split1 = split0[1].split('" title="', 1)
     # recommended_amd_gpu = split1[0]
-    
+
     minimum_ram_line = [line for line in game_page if "Minimum RAM Requirement" in line]
     split0 = minimum_ram_line[0].split('Minimum RAM Requirement">', 1)
     split1 = split0[1].split('</span>', 1)
     minimum_ram = split1[0]
-    
+
     # recommended_ram_line = [line for line in game_page if "Recommended RAM Requirement" in line]
     # split0 = recommended_ram_line[0].split('Recommended RAM Requirement">', 1)
     # split1 = split0[1].split('</span>', 1)
