@@ -51,7 +51,7 @@ def home_page():
     # print(search_cpu("AMD FX-6350 Six-Core")) # amd
     # print("------")
     # print(search_cpu("amd a10-7700k apu r7 graphics"))
-
+    print(igdb_with_ids([3124,3125,3136]))
     # print(search_gpu("Pentium 4 3.00GHz"))
     return render_template('home.html')
 
@@ -265,7 +265,7 @@ def igdb_with_id(gameid):
 
 def igdb_with_ids(arr):
     ig = igdb(igdbkey)
-    result = ig.games(arr).json()
+    result = ig.games({'ids': arr}).json()
     return result
 
 def igdb_with_name(gamename):
