@@ -6,7 +6,7 @@ import re
 import csv
 import psycopg2 as dbapi2
 from flask import redirect, Blueprint, flash
-link1 = Blueprint('link2',__name__)
+link2 = Blueprint('link2',__name__)
 from flask.helpers import url_for
 from flask import Flask
 from flask import render_template, Response
@@ -32,44 +32,25 @@ debate_games = "https://www.game-debate.com/game/api/list"
 
 debate_ex = "https://www.game-debate.com/games/index.php?g_id=1164"
 
-def igdb_with_id(gameid):
-    ig = igdb(igdbkey)
-    result = ig.games(gameid).json()
-    return result[0]
+@link2.route("/det_search")
+def det_search():
+    # arr = []
+    # for g in gamegenre:
+    #     arr.append(g['name'])
+    return render_template('detsearch.html', genres = gamegenre)
 
-def igdb_with_ids(arr):
-    ig = igdb(igdbkey)
-    result = ig.games({'ids': arr}).json()
-    return result
+@link2.route("/send_detsearch", methods = ['GET', 'POST'])
+def send_detsearch():
+    if request.method == "POST":
+        key = request.form['keyword']
+        genre = request.form['genre']
 
-def igdb_with_name(gamename):
-    ig = igdb(igdbkey)
-    #result = ig.games({'search': gamename, 'expand' : ['genres']}).json()
-    result = ig.games({'search': gamename}).json()
-    i = 0
-    while i < len(result):
-        try:
-            if not 6 in result[i]['platforms'] or 13 in result[i]['platforms']: # 3 linux, 6 pc-windows, 13 pc-dos, 14 mac
-                del result[i]
-                i -= 1
-        except KeyError:
-            del result[i]
-            i = -1
-        i+=1
-    for r in result:
-        r['category'] = gamecategory[r['category']]
-        i = 0
-        try:
-            for g in r['genres']:
-                for gn in gamegenre:
-                    if g==gn['id']:
-                        r['genres'][i] = gn['name']
-                i += 1
-        except:
-            pass
-        try:
-            r['total_rating'] = round(r['total_rating'],2)
-        except:
-            pass
-
-    return result
+        ig = igdb(igdbkey)
+        result = ig.games({'search': key, 'filters' :{
+        "[genres][eq]": genre,}}).json()
+        arr = []
+        for r in result:
+            arr.append(r['name'])
+        print(str(arr))
+        return redirect(url_for('link2.det_search'))
+        #return render_template('search.html',keyword = keyword, result = arr)
