@@ -13,7 +13,7 @@
 
 <div class="input-group">
   <span class="input-group-addon"><i class="glyphicon glyphicon-tasks" aria-hidden="true"></i></span>
-	<select class="w3-select w3-orange" name="genre">
+	<select class="w3-select w3-orange" name="genre" required>
 	<option value="" selected disabled class="hideoption">Select a Genre</option>
   {% for g in genres %}
   <option value="{{g['id']}}">{{g['name']}}</option>
@@ -22,7 +22,7 @@
 </div>
 <div class="input-group">
   <span class="input-group-addon"><i class="glyphicon glyphicon-tasks" aria-hidden="true"></i></span>
-  <select class="w3-select w3-orange" name="category">
+  <select class="w3-select w3-orange" name="category" required>
   <option value="" selected disabled class="hideoption">Select a Category</option>
   {% for g in category %}
   <option value="{{g}}">{{g}}</option>
@@ -31,7 +31,7 @@
 </div>
 <div class="input-group">
      <span class="input-group-addon"><i class="glyphicon glyphicon-user" aria-hidden="true"></i></span>
-     <input type="text" placeholder="Total Rating" name="rating" class="input-txt"><br>
+     <input type="text" placeholder="Total Rating" name="rating" class="input-txt" required><br>
 </div>
 <br>
 <button class="btn"  type="submit">Search!</button>

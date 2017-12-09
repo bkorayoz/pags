@@ -45,7 +45,7 @@ def send_detsearch():
         category =request.form['category']
         rating =request.form['rating']
         ig = igdb(igdbkey)
-        
+
         result = ig.games({'search': key, 'filters' :{
         "[genres][eq]": genre,"[category][eq]": gamecategory.index(category),"[total_rating][gte]": rating,}}).json()
         i = 0
