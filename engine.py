@@ -40,8 +40,9 @@ def engine():
 
 	name = igdb_with_name(games1)[0]
 	related = name['games']
-	for n in range(len(related)):
-		relateds['0'].append(igdb_with_id(related[n]))
+	# for n in range(len(related)):
+	# 	relateds['0'].append(igdb_with_id(related[n]))
+	relateds['0'] = igdb_with_ids(related)
 	relatedids = maxgame(relateds['0'])
 	if relatedids[0] not in arr:
 		arr.append(relatedids[0])
@@ -50,8 +51,9 @@ def engine():
 
 	name = igdb_with_name(games2)[0]
 	related = name['games']
-	for n in range(len(related)):
-		relateds['1'].append(igdb_with_id(related[n]))
+	# for n in range(len(related)):
+	# 	relateds['1'].append(igdb_with_id(related[n]))
+	relateds['1'] = igdb_with_ids(related)
 	relatedids = maxgame(relateds['1'])
 
 	if relatedids[0] not in arr:
@@ -61,8 +63,9 @@ def engine():
 
 	name = igdb_with_name(games3)[0]
 	related = name['games']
-	for n in range(len(related)):
-		relateds['2'].append(igdb_with_id(related[n]))
+	# for n in range(len(related)):
+	# 	relateds['2'].append(igdb_with_id(related[n]))
+	relateds['2'] = igdb_with_ids(related)
 	relatedids = maxgame(relateds['2'])
 
 	if relatedids[0] not in arr:

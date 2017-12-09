@@ -41,7 +41,7 @@ def sysinfoget():
     with dbapi2.connect(current_app.config['dsn']) as connection:
         cursor = connection.cursor()
         query = "INSERT INTO SYSDB (USERID, GPUID, CPUID, RAMID, OSNAME) VALUES (%s, %s, %s, %s, %s)"
-        cursor.execute(query,(uid, gpuid, cpuid, ramid,ostype))
+        cursor.execute(query,(uid, gpuid, cpuid, ramid, ostype))
     return
 
 @link4.route('/gameReqGet/<gameName>')
