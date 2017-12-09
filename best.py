@@ -22,6 +22,7 @@ import http.client
 import requests
 from html.parser import HTMLParser
 
+
 # route olarak link2 kullan!
 igdbkey = "e2bc1782f5f9845a007d5a7398da2cf6"
 
@@ -34,23 +35,43 @@ debate_ex = "https://www.game-debate.com/games/index.php?g_id=1164"
 
 @link2.route("/det_search")
 def det_search():
-    # arr = []
-    # for g in gamegenre:
-    #     arr.append(g['name'])
-    return render_template('detsearch.html', genres = gamegenre)
+    return render_template('detsearch.html', genres = gamegenre, category = gamecategory, status=gamestatus)
 
 @link2.route("/send_detsearch", methods = ['GET', 'POST'])
 def send_detsearch():
     if request.method == "POST":
         key = request.form['keyword']
         genre = request.form['genre']
-
+        category =request.form['category']
+        rating =request.form['rating']
         ig = igdb(igdbkey)
+        print(category)
         result = ig.games({'search': key, 'filters' :{
-        "[genres][eq]": genre,}}).json()
-        arr = []
+        "[genres][eq]": genre,"[category][eq]": gamecategory.index(category),"[total_rating][gte]": rating,}}).json()
+        i = 0
+        while i < len(result):
+            try:
+                if not 6 in result[i]['platforms'] or 13 in result[i]['platforms']: # 3 linux, 6 pc-windows, 13 pc-dos, 14 mac
+                    del result[i]
+                    i -= 1
+            except KeyError:
+                del result[i]
+                i = -1
+            i+=1
         for r in result:
-            arr.append(r['name'])
-        print(str(arr))
-        return redirect(url_for('link2.det_search'))
+            i = 0
+            r['category']=gamecategory[r['category']]
+            try:
+                for g in r['genres']:
+                    for gn in gamegenre:
+                        if g==gn['id']:
+                            r['genres'][i] = gn['name']
+                    i += 1
+            except:
+                pass
+            try:
+                r['total_rating'] = round(r['total_rating'],2)
+            except:
+                pass
+        return render_template('search.html',keyword = key, result = result)
         #return render_template('search.html',keyword = keyword, result = arr)
