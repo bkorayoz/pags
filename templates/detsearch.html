@@ -1,5 +1,5 @@
 {% extends 'layout.html' %}
-{% block title %} Hardware Configuration {% endblock %}
+{% block title %} Detailed Search {% endblock %}
 
 {% block content %}
  <form  method = "POST" action= " {{ url_for('link2.send_detsearch') }}">
@@ -11,21 +11,30 @@
          <input type="text" placeholder="Keyword" name="keyword" class="input-txt" required><br>
     </div>
 
-  <div class="input-group">
+<div class="input-group">
   <span class="input-group-addon"><i class="glyphicon glyphicon-tasks" aria-hidden="true"></i></span>
-	<select class="w3-select w3-orange" name="genre" required>
+	<select class="w3-select w3-orange" name="genre">
 	<option value="" selected disabled class="hideoption">Select a Genre</option>
   {% for g in genres %}
   <option value="{{g['id']}}">{{g['name']}}</option>
   {% endfor %}
 	</select>
+</div>
+<div class="input-group">
+  <span class="input-group-addon"><i class="glyphicon glyphicon-tasks" aria-hidden="true"></i></span>
+  <select class="w3-select w3-orange" name="category">
+  <option value="" selected disabled class="hideoption">Select a Category</option>
+  {% for g in category %}
+  <option value="{{g}}">{{g}}</option>
+  {% endfor %}
+  </select>
+</div>
+<div class="input-group">
+     <span class="input-group-addon"><i class="glyphicon glyphicon-user" aria-hidden="true"></i></span>
+     <input type="text" placeholder="Total Rating" name="rating" class="input-txt"><br>
+</div>
+<br>
+<button class="btn"  type="submit">Search!</button>
 
-</div>
-  <br>
-    <div>
-      <button type="submit" class="btn">Search</button>
-    </div>
-  </div>
-</div>
 </form>
 {% endblock %}
