@@ -35,7 +35,7 @@ debate_ex = "https://www.game-debate.com/games/index.php?g_id=1164"
 
 @link2.route("/det_search")
 def det_search():
-    return render_template('detsearch.html', genres = gamegenre, category = gamecategory, status=gamestatus)
+    return render_template('detsearch.html', genres = gamegenre, category = gamecategory)
 
 @link2.route("/send_detsearch", methods = ['GET', 'POST'])
 def send_detsearch():
@@ -45,7 +45,7 @@ def send_detsearch():
         category =request.form['category']
         rating =request.form['rating']
         ig = igdb(igdbkey)
-        print(category)
+        
         result = ig.games({'search': key, 'filters' :{
         "[genres][eq]": genre,"[category][eq]": gamecategory.index(category),"[total_rating][gte]": rating,}}).json()
         i = 0
