@@ -21,6 +21,7 @@ from system_requirements_checker import SystemRequirementsChecker
 
 app = Flask(__name__)
 app.register_blueprint(link1)
+app.register_blueprint(link2)
 app.register_blueprint(link3)
 app.register_blueprint(link4)
 app.register_blueprint(link5)
