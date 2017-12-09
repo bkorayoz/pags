@@ -58,18 +58,9 @@ def gameReqGet(gameName):
                                         },
                                  'RAM': rawRequirements['Minimum']['RAM']
                                },
-                    # 'Recommended': {
-                    #                  'CPU': {
-                    #                           'Intel': hwNametoId(search_hw(eraseFromString(rawRequirements['Minimum']['CPU']['Intel'], '(', ')')), 'CPU'),
-                    #                           'AMD': hwNametoId(search_hw(eraseFromString(rawRequirements['Minimum']['CPU']['AMD'], '(', ')')), 'CPU')
-                    #                         },
-                    #                  'GPU': {
-                    #                           'Nvidia': '0',
-                    #                           'AMD': '0'
-                    #                         },
-                    #                  'RAM': '0'
-                    #                }
                    }
+
+    print(str(requirements))
     return requirements
 
 def eraseFromString(term, deliminator1, deliminator2):
@@ -120,3 +111,26 @@ def hwNametoIdGpu(name):
         return hw_id[0]
     else:
         return '0'
+
+def getScoreCpu(id):
+    with dbapi2.connect(current_app.config['dsn']) as connection:
+        cursor = connection.cursor()
+        query = """SELECT SCORE FROM CPU WHERE (ID = %s)"""
+        cursor.execute(query, (id,))
+        score = cursor.fetchone()
+    if score:
+        return score[0]
+    else:
+        return None
+
+def getScoreGpu(id):
+    with dbapi2.connect(current_app.config['dsn']) as connection:
+        cursor = connection.cursor()
+        query = """SELECT SCORE FROM GPU WHERE (ID = %s)"""
+        cursor.execute(query, (id,))
+        score = cursor.fetchone()
+    if score:
+        return score[0]
+    else:
+        return None
+

@@ -15,9 +15,9 @@ dsn = """user='vagrant' password='vagrant' host='localhost' port=5432 dbname='pa
 
 def fetch_requirements(title):
     r = requests.get("https://www.game-debate.com/game/api/list").json()
-    
+    print("title: " + title)
     game_id = (next((item for item in r if item["g_title"] == title))['g_id'])
-    
+    print("game_id: " + game_id)
     game_page = requests.get("https://www.game-debate.com/games/index.php?g_id=" + game_id).text
     
     game_page = game_page.splitlines()

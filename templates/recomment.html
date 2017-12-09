@@ -1,0 +1,57 @@
+{% extends 'layout.html' %}
+{% block title %}Personalized Game Recommend{% endblock %}
+{% block content %}
+
+<div class="w3-container">
+
+
+{% if not result %}
+<form method = "POST" action= " {{ url_for('link5.engine') }}">
+	<h1 class="w3-large"> Favourite Games </h1><br>
+<div class="input-group">
+    <span class="input-group-addon"><i class="fa fa-at" aria-hidden="true"></i></span>
+    <input type="text"  placeholder="Favourite Game" name="game1" class="input-txt" required><br>
+    </div>
+    <br>
+    <div class="input-group">
+    <span class="input-group-addon"><i class="glyphicon glyphicon-lock" aria-hidden="true"></i></span>
+    <input type="text" placeholder="Favourite Game" name="game2" class="input-txt" required><br>
+    </div>
+    <br>
+    <div class="input-group">
+      <span class="input-group-addon"><i class="glyphicon glyphicon-lock" aria-hidden="true"></i></span>
+    <input type="text" placeholder="Favourite Game" name="game3" class="input-txt" required><br>
+    </div>
+    <button type="submit" class="btn">RECOMMEND</button>
+</form>
+{% endif%}
+
+{% if result %}
+<h1 class="w3-xlarge"> Recommendations </h1><br>
+<table class="w3-table-all w3-hoverable w3-centered">
+<thead>
+<tr  class ="w3-orange">
+  <th><strong><i class="fa fa-picture-o" aria-hidden="true"></i></strong></th>
+<th><strong>Name</strong></th>
+<th><strong>Genre</strong></th>
+<th><strong> IGDB Rating</strong></th>
+<th><strong>Category</strong></th>
+</tr>
+</thead>
+{% for r in result %}
+<tr>
+<td style="vertical-align: middle"><a href="{{r['url']}}" style="display:block;">{% if r['screenshots'] %} <img src=" {{r['screenshots'][0]['url']}}">{% else %}<img  height="90" width="90" src="https://vignette3.wikia.nocookie.net/shokugekinosoma/images/6/60/No_Image_Available.png">{% endif %}</a></td>
+<td style="vertical-align: middle"><a href="{{r['url']}}" style="display:block;"><strong style="color:#E88E0C"><div class="w3-container w3-text-orange w3-hover-text-white">{{r['name']}}</div></strong> {% if r['release_dates'] %} ({{r['release_dates'][0]['y']}}) {% endif %}</a> </td>
+<td style="vertical-align: middle"><a href="{{r['url']}}" style="display:block;">{% for g in r['genres'] %} {{g}}<br> {% endfor %}</a> </td>
+<td style="vertical-align: middle"><a href="{{r['url']}}" style="display:block;"> {% if r['rating'] %}{{r['rating']}}{% else %} N/A {% endif %}</a> </td>
+<td style="vertical-align: middle"><a href="{{r['url']}}" style="display:block;"> {{r['category']}} </a> </td>
+</tr>
+{% endfor %}
+</table>
+{% elif engin %}
+<div class="alert alert-warning">No results found</div>
+{% elif not engin and not spec %}
+<div class="alert alert-warning">Configure Hardware to have results that are processed for your specifitations</div>
+{% endif %}
+</div>
+{% endblock %}

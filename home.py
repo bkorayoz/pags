@@ -263,6 +263,11 @@ def igdb_with_id(gameid):
     result = ig.games(gameid).json()
     return result[0]
 
+def igdb_with_ids(arr):
+    ig = igdb(igdbkey)
+    result = ig.games(arr).json()
+    return result
+
 def igdb_with_name(gamename):
     ig = igdb(igdbkey)
     #result = ig.games({'search': gamename, 'expand' : ['genres']}).json()

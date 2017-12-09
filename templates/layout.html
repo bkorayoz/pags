@@ -37,7 +37,9 @@ a:hover{
       <ul class="nav navbar-nav">
 				<li class="w3-hover-ccc"><a style="color: #E88E0C;"href="{{ url_for('link1.home_page') }}">PAGS</a></li>
         <li class="w3-hover-ccc"><a style="color: #E88E0C" href=""><strong>Detailed Search</strong></a></li>
-				<li class="w3-hover-ccc"><a style="color: #E88E0C" href=""><strong>PAGS Reccommand Engine</strong></a></li>
+        {% if current_user.is_authenticated %}
+				<li class="w3-hover-ccc"><a style="color: #E88E0C" href="{{url_for('link5.pags')}}"><strong>PAGS Reccommand Engine</strong></a></li>
+        {% endif%}
       </ul>
 
       <ul class="nav navbar-nav navbar-right">

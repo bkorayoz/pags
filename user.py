@@ -67,6 +67,16 @@ def savehw():
         return redirect(url_for('link3.userProfile'))
 
 
+def getspecsId():
+    uid = User(current_user.name,"zzz", "zzz").get_id()[0]
+    with dbapi2._connect(current_app.config['dsn']) as connection:
+        cursor = connection.cursor()
+        query = """ SELECT CPU.ID,GPU.ID,RAM.SIZE FROM SYSDB,GPU,CPU,RAM
+        WHERE (SYSDB.GPUID = GPU.ID AND SYSDB.CPUID = CPU.ID AND SYSDB.RAMID = RAM.ID AND SYSDB.USERID = %s)"""
+        cursor.execute(query,(uid,))
+        arr = cursor.fetchone()
+        return arr
+
 def getspecs():
     uid = User(current_user.name,"zzz", "zzz").get_id()[0]
     with dbapi2._connect(current_app.config['dsn']) as connection:
