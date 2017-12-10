@@ -51,9 +51,29 @@ def home_page():
     # print(search_cpu("AMD FX-6350 Six-Core")) # amd
     # print("------")
     # print(search_cpu("amd a10-7700k apu r7 graphics"))
-    print(igdb_with_ids([3124,3125,3136]))
     # print(search_gpu("Pentium 4 3.00GHz"))
     return render_template('home.html')
+
+@link1.route('/gameprofile/<int:id>')
+def gameprofile(id):
+    r = igdb_with_id(id)
+    r['category'] = gamecategory[r['category']]
+    i = 0
+    try:
+        for g in r['genres']:
+            for gn in gamegenre:
+                if g==gn['id']:
+                    r['genres'][i] = gn['name']
+            i += 1
+    except:
+        pass
+    try:
+        r['total_rating'] = round(r['total_rating'],2)
+    except:
+        pass
+    #print(str(igdb_with_name(game['name'])[0]))
+    print(str(r))
+    return render_template('game_profile.html', game = r)
 
 def is_safe_url(target):
     ref_url = urlparse(request.host_url)
