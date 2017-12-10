@@ -13,7 +13,10 @@ import requests
 #from flask_login import UserMixin, LoginManager
 #from passlib.apps import custom_app_context as pwd_context
 #from flask import current_app
-from whoosh.qparser import QueryParser
+from whoosh import qparser
+#from whoosh.qparser import QueryParser, FuzzyTermPlugin
+from nltk import download
+from nltk.corpus import stopwords
 dsn = """user='vagrant' password='vagrant' host='localhost' port=5432 dbname='pags'"""
 
 def fetch_requirements(title):
@@ -26,7 +29,18 @@ def fetch_requirements(title):
         writer.add_document(title=game['g_title'], path=u"/a",content=game['g_title'])
     writer.commit()
     with  ix.searcher() as searcher:
-        query = QueryParser("content", ix.schema).parse(title)
+        parser = qparser.QueryParser("content", ix.schema)
+        parser.add_plugin(qparser.FuzzyTermPlugin())
+        parser.remove_plugin_class(qparser.PhrasePlugin)
+        parser.add_plugin(qparser.SequencePlugin("!(~(?P<slop>[1-9][0-9]*))?"))
+        keywords = title.split(' ')
+        download('stopwords')
+        keywords = [word for word in keywords if word not in stopwords.words('english')]
+        for i, keyword in enumerate(keywords):
+            keywords[i] = keyword + '~2'
+        title = ' '.join(keywords)
+        title = '"' + title + '"'
+        query = parser.parse(title)
         results = searcher.search(query)
         if results.is_empty():
             return False
@@ -44,7 +58,7 @@ def fetch_requirements(title):
 
         minimum_cpu_line = [line for line in game_page if "Minimum processor requirement" in line]
         if len(minimum_cpu_line) != 0:
-            print("minimum cpu")
+            #print("minimum cpu")
             minimum_intel_cpu_line = game_page[game_page.index(minimum_cpu_line[0])+3]
             split0 = minimum_intel_cpu_line.split('&cpu=', 1)
             split1 = split0[1].split('" title="', 1)
@@ -65,7 +79,7 @@ def fetch_requirements(title):
 
         recommended_cpu_line = [line for line in game_page if "Recommended processor requirement" in line]
         if len(recommended_cpu_line) != 0:
-            print("recommended cpu")
+            #print("recommended cpu")
             recommended_intel_cpu_line = game_page[game_page.index(recommended_cpu_line[0])+3]
             split0 = recommended_intel_cpu_line.split('&cpu=', 1)
             split1 = split0[1].split('" title="', 1)
@@ -86,7 +100,7 @@ def fetch_requirements(title):
 
         minimum_gpu_line = [line for line in game_page if "Minimum graphic card requirement" in line]
         if len(minimum_gpu_line) != 0:
-            print("minimum gpu")
+            #print("minimum gpu")
             minimum_nvidia_gpu_line = game_page[game_page.index(minimum_gpu_line[0])+3]
             split0 = minimum_nvidia_gpu_line.split('&graphics=', 1)
             split1 = split0[1].split('" title="', 1)
@@ -102,12 +116,12 @@ def fetch_requirements(title):
             if 'GB' in minimum_amd_gpu or 'MB' in minimum_amd_gpu:
                 minimum_amd_gpu = minimum_amd_gpu.rsplit(' ', 1)[0]
 
-            requirements['Minimum']['GPU']['Nvidia'] = recommended_nvidia_gpu
-            requirements['Minimum']['GPU']['AMD'] = recommended_amd_gpu
+            requirements['Minimum']['GPU']['Nvidia'] = minimum_nvidia_gpu
+            requirements['Minimum']['GPU']['AMD'] = minimum_amd_gpu
 
         recommended_gpu_line = [line for line in game_page if "Recommended graphic card requirement" in line]
         if len(recommended_gpu_line) != 0:
-            print("recommended gpu")
+            #print("recommended gpu")
             recommended_nvidia_gpu_line = game_page[game_page.index(recommended_gpu_line[0])+3]
             split0 = recommended_nvidia_gpu_line.split('&graphics=', 1)
             split1 = split0[1].split('" title="', 1)
@@ -128,7 +142,7 @@ def fetch_requirements(title):
 
         minimum_ram_line = [line for line in game_page if "Minimum RAM Requirement" in line]
         if len(minimum_ram_line) != 0:
-            print("minimum ram")
+            #print("minimum ram")
             split0 = minimum_ram_line[0].split('Minimum RAM Requirement">', 1)
             split1 = split0[1].split('</span>', 1)
             minimum_ram = split1[0]
@@ -137,7 +151,7 @@ def fetch_requirements(title):
 
         recommended_ram_line = [line for line in game_page if "Recommended RAM Requirement" in line]
         if len(recommended_ram_line) != 0:
-            print("minimum ram")
+            #print("minimum ram")
             split0 = recommended_ram_line[0].split('Recommended RAM Requirement">', 1)
             split1 = split0[1].split('</span>', 1)
             recommended_ram = split1[0]
