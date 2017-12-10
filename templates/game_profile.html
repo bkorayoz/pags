@@ -38,6 +38,9 @@
   		width:640px;
   		height:360px;
 	}
+	.rate{
+		p{{game['total_rating']}}
+	}
 
 
 </style>
@@ -137,8 +140,8 @@
 			<div class="col-md-9">
 				<div class="clearfix">
 
-                <div class="c100 p{{game['total_rating']}} default orange text-center">
-                    <span>70.9%</span>
+                <div class="c100 rate default orange text-center">
+                    <span>{{game['total_rating']}}%</span>
                     <div class="slice">
                         <div class="bar"></div>
                         <div class="fill"></div>
