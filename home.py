@@ -23,6 +23,7 @@ from urllib.request import Request, urlopen
 import http.client
 import requests
 from html.parser import HTMLParser
+from classes import UserList
 
 
 igdbkey = "e2bc1782f5f9845a007d5a7398da2cf6"
@@ -192,7 +193,7 @@ def search_gpu(name):
 @link1.route('/login', methods = ['GET', 'POST'])
 def login():
     if request.method == "POST":
-        Flag = current_app.store.verify_user(request.form['uname'], request.form['psw'])
+        Flag = UserList().verify_user(request.form['uname'], request.form['psw'])
         if Flag == 0:
             user = User(request.form['uname'],"zzz", "zzz").get_user(User(request.form['uname'],"zzz", "zzz").get_id())
             login_user(user)
