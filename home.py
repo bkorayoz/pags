@@ -24,7 +24,7 @@ import http.client
 import requests
 from html.parser import HTMLParser
 from classes import UserList
-
+import engine as eng
 
 igdbkey = "e2bc1782f5f9845a007d5a7398da2cf6"
 
@@ -77,10 +77,15 @@ def gameprofile(id):
         pass
     #print(str(igdb_with_name(game['name'])[0]))
 
-    requirements=mes.gameReqGet(r['name'])
-
-    print(str(requirements))
-    return render_template('game_profile.html', game = r)
+    requirements=mes.gameReqGetWithName(r['name'])
+    flag = eng.requirementsCompare(r)
+    if flag == None:
+        c = -1
+    elif flag == False:
+        c = 0
+    else:
+        c = 1
+    return render_template('game_profile.html', game = r, req = requirements, canI = c)
 
 
 

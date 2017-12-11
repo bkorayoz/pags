@@ -10,14 +10,14 @@
     }
     .info{
       font-size: 25px;
-      margin-bottom: 50px; 
+      margin-bottom: 50px;
       color:black;
     }
 
     .info2{
     	font-size: 34px;
     }
-   
+
    	.info3{
    		font-size:  18px;
    	}
@@ -55,18 +55,18 @@
       <div class="media">
         <br><br><br><br>
 			<div class="container">
-			  <img class="img-responsive" src="{{game['cover']['url']}}" width="460" height="345"> 
+			  <img class="img-responsive" src="{{game['cover']['url']}}" width="460" height="345">
 			</div>
       </div>
     </div>
-    
+
     <div class="col-md-6 text-left">
     	<br>
-    	<h3 class="header"> 
+    	<h3 class="header">
 			<p>
 				{{game['name']}}
 			</p>
-    	</h3> 
+    	</h3>
     	<br>
     	<div class="info">
     		<u class="info3"><strong>Release Date:</strong></u>
@@ -74,13 +74,25 @@
     		{{game['release_dates'][0]['human']}}
 
 		</div>
+      {% if req %}
         <div class="info3"><u>System Requirements:</u></div>
+        <div> CPU: {{req['Minimum']['CPU']['Intel']}} / {{req['Minimum']['CPU']['AMD']}}  </div>
+        <div> GPU: {{req['Minimum']['GPU']['Nvidia']}} / {{req['Minimum']['GPU']['AMD']}}  </div>
+        <div> RAM: {{req['Minimum']['RAM']}}  </div>
+        {% endif %}
         <br>
+        <div class="info3"><u>Can I Run It:
+          {% if canI == -1 %} Bilmem
+          {% elif canI == 0 %} NO
+          {% else %} YUP
+          {% endif %}
+
+        </u></div>
         <u><font size=5 color="orange";>About</font></u>
         <br>
         <div class="info3 black"><u><strong><font color="orange";>Genre:</font></strong></u>
         	{% for g in game['genres'] %}
-			<div>-{{ g }}  </div> 
+			<div>-{{ g }}  </div>
 			{% endfor %}
         </div>
     </div>
@@ -88,8 +100,8 @@
     	<br><br>
     	<div class="row">
 
-    		<font size=5 color="orange";>Total Rating</font>   
-    		
+    		<font size=5 color="orange";>Total Rating</font>
+
 
 		</div>
 		<div class="row">
@@ -105,12 +117,12 @@
                 </div>
 			    </div>
 			</div>
-			
+
     	</div>
     	<font size=3><u>Total Votes: {{game['total_rating_count']}}</u></font>
-    	
+
     </div>
-</div>      
+</div>
 
 <br>
 <div class="info text-left">
@@ -125,14 +137,14 @@
 	<div class="row">
 		<div class="col-md-7">
 		<h2>Screenshots:</h2>
-				
-			
-		
+
+
+
 			  <meta name="viewport" content="initial-scale=5">
 			  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 			  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 			  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-			
+
 
 			<div class="container">
 			  <div id="myCarousel" class="carousel slide" data-ride="carousel">
@@ -152,7 +164,7 @@
 			      <div class="item">
 			        <img  src="{{game['screenshots'][1]['url']}}"  style="height=400%; width:360px;">
 			      </div>
-			    
+
 			      <div class="item">
 			        <img  src="{{game['screenshots'][2]['url']}}"  style="height=400%; width:360px;">
 			      </div>
@@ -170,7 +182,7 @@
 			  </div>
 			</div>
 
-			
+
 
 		</div>
 		<div class="col-md-5">
@@ -182,7 +194,7 @@
 				function relocate_igdb()
 				{
 				     location.href = "{{game['url']}}";
-				} 
+				}
 				</script>
 			</div><br><br><br>
 			<div> <u>Other Pages:</u> </div><br><br>
@@ -192,7 +204,7 @@
 				function relocate_wiki()
 				{
 				     location.href = "{{game['websites'][0]['url']}}";
-				} 
+				}
 				</script>
 			</div><br><br>
 			<div>
@@ -201,12 +213,12 @@
 				function relocate_other()
 				{
 				     location.href = "{{game['websites'][1]['url']}}";
-				} 
+				}
 				</script>
 			</div>
-			
+
 		</div>
-	</div>	
+	</div>
 
 
 

@@ -12,7 +12,7 @@ from passlib.apps import custom_app_context as pwd_context
 from flask_login.utils import login_required
 from flask_login import login_manager, login_user, logout_user,current_user
 from fetch_game_requirements import fetch_requirements
-from home import search_cpu, search_gpu, igdb_with_name, igdb_with_id,igdb_with_ids
+import home as h
 from message import gameReqGet, getScoreCpu, getScoreGpu
 from user import getspecsId
 
@@ -41,22 +41,22 @@ def engine():
 	arr = []
 	result = []
 
-	name = igdb_with_name(games1)[0]
+	name = h.igdb_with_name(games1)[0]
 	related = name['games']
 	# for n in range(len(related)):
-	# 	relateds['0'].append(igdb_with_id(related[n]))
-	relateds['0'] = igdb_with_ids(related)
+	# 	relateds['0'].append(h.igdb_with_id(related[n]))
+	relateds['0'] = h.igdb_with_ids(related)
 	relatedids = maxgame(relateds['0'])
 	if relatedids[0] not in arr:
 		arr.append(relatedids[0])
 	if relatedids[1] not in arr:
 		arr.append(relatedids[1])
 
-	name = igdb_with_name(games2)[0]
+	name = h.igdb_with_name(games2)[0]
 	related = name['games']
 	# for n in range(len(related)):
-	# 	relateds['1'].append(igdb_with_id(related[n]))
-	relateds['1'] = igdb_with_ids(related)
+	# 	relateds['1'].append(h.igdb_with_id(related[n]))
+	relateds['1'] = h.igdb_with_ids(related)
 	relatedids = maxgame(relateds['1'])
 
 	if relatedids[0] not in arr:
@@ -64,11 +64,11 @@ def engine():
 	if relatedids[1] not in arr:
 		arr.append(relatedids[1])
 
-	name = igdb_with_name(games3)[0]
+	name = h.igdb_with_name(games3)[0]
 	related = name['games']
 	# for n in range(len(related)):
-	# 	relateds['2'].append(igdb_with_id(related[n]))
-	relateds['2'] = igdb_with_ids(related)
+	# 	relateds['2'].append(h.igdb_with_id(related[n]))
+	relateds['2'] = h.igdb_with_ids(related)
 	relatedids = maxgame(relateds['2'])
 
 	if relatedids[0] not in arr:
