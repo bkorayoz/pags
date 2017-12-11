@@ -44,9 +44,9 @@ class StartingTestCase(TestCase):
         #assert rv.status_code == 302
         assert 'turgut@itu.edu.tr' in str(rv.data)
 
-    def test_view_form_c_initdb_post(self): # INITDB - POST
+    def test_view_form_c_initdb_get(self): # INITDB - POST
         self.test_view_form_b_login_post()
-        rv = self.client.post('/initdb')
+        rv = self.client.get('/initdb')
         assert 'Redirecting' or 'Detailed Search' in str(rv.data)
 
     def test_view_form_d_detSearch_get(self): # DETAILED SEARCH - ASSERT CHECK
@@ -86,7 +86,7 @@ class StartingTestCase(TestCase):
         assert rv.status_code == 200
         assert 'Select a CPU' in str(rv.data)
 
-    def test_view_form_k_confighw_post(self): # CONFIGHW - POST
+    def test_view_form_k_confighw_post(self): # SAVE HW - POST
         self.test_view_form_b_login_post()
         post_data = {'cpu': 'AMD Athlon 7750', 'gpu': 'AMD HD 5770','ram': '4 GB', 'os': 'Windows'}
         rv = self.client.post('/savehw', data=post_data, follow_redirects=True)

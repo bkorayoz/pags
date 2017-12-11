@@ -41,74 +41,67 @@ def unauthorized():
     flash("Unauthorized Access. Please Sign In or Sign Up!")
     return redirect(url_for('link1.home_page'))
 
-
-
-@app.route('/initdb', methods = ['GET', 'POST'])
+@app.route('/initdb')
 def initialize_database():
-    if request.method == "POST":
-            with dbapi2.connect(app.config['dsn']) as connection:
-                cursor = connection.cursor()
+        with dbapi2.connect(app.config['dsn']) as connection:
+            cursor = connection.cursor()
+            query = """DROP TABLE IF EXISTS USERDB CASCADE"""
+            cursor.execute(query)
+            query = """CREATE TABLE USERDB (ID SERIAL PRIMARY KEY,
+            NAME VARCHAR(40) NOT NULL,
+            EMAIL VARCHAR(50), PSW VARCHAR(200)) """
+            cursor.execute(query)
 
-                query = """DROP TABLE IF EXISTS USERDB CASCADE"""
-                cursor.execute(query)
-                query = """CREATE TABLE USERDB (ID SERIAL PRIMARY KEY,
-                NAME VARCHAR(40) NOT NULL,
-                EMAIL VARCHAR(50), PSW VARCHAR(200)) """
-                cursor.execute(query)
+            query = """DROP TABLE IF EXISTS GPU CASCADE"""
+            cursor.execute(query)
 
-                query = """DROP TABLE IF EXISTS GPU CASCADE"""
-                cursor.execute(query)
+            query = """CREATE TABLE GPU (ID SERIAL PRIMARY KEY,
+            NAME VARCHAR(60) NOT NULL,SEARCHTERM VARCHAR(150),
+            SCORE FLOAT, RANKING INT) """
+            cursor.execute(query)
 
-                query = """CREATE TABLE GPU (ID SERIAL PRIMARY KEY,
-                NAME VARCHAR(60) NOT NULL,SEARCHTERM VARCHAR(150),
-                SCORE FLOAT, RANKING INT) """
-                cursor.execute(query)
+            query = """DROP TABLE IF EXISTS CPU CASCADE"""
+            cursor.execute(query)
+            query = """CREATE TABLE CPU (ID SERIAL PRIMARY KEY,
+            NAME VARCHAR(60) NOT NULL,SEARCHTERM VARCHAR(60),
+            SCORE FLOAT, RANKING INT) """
+            cursor.execute(query)
 
-                query = """DROP TABLE IF EXISTS CPU CASCADE"""
-                cursor.execute(query)
-                query = """CREATE TABLE CPU (ID SERIAL PRIMARY KEY,
-                NAME VARCHAR(60) NOT NULL,SEARCHTERM VARCHAR(60),
-                SCORE FLOAT, RANKING INT) """
-                cursor.execute(query)
+            query = """DROP TABLE IF EXISTS RAM CASCADE"""
+            cursor.execute(query)
 
-                query = """DROP TABLE IF EXISTS RAM CASCADE"""
-                cursor.execute(query)
+            query = """CREATE TABLE RAM (ID SERIAL PRIMARY KEY,
+            SIZE VARCHAR(20) NOT NULL)"""
+            cursor.execute(query)
 
-                query = """CREATE TABLE RAM (ID SERIAL PRIMARY KEY,
-                SIZE VARCHAR(20) NOT NULL)"""
-                cursor.execute(query)
+            query = """DROP TABLE IF EXISTS SYSDB CASCADE"""
+            cursor.execute(query)
 
-                query = """DROP TABLE IF EXISTS SYSDB CASCADE"""
-                cursor.execute(query)
+            query = """CREATE TABLE SYSDB (USERID  INT REFERENCES USERDB(ID) PRIMARY KEY, GPUID INT REFERENCES GPU(ID),
+            CPUID INT REFERENCES CPU(ID), RAMID INT REFERENCES RAM(ID), OSNAME VARCHAR(30))"""
+            cursor.execute(query)
 
-                query = """CREATE TABLE SYSDB (USERID  INT REFERENCES USERDB(ID) PRIMARY KEY, GPUID INT REFERENCES GPU(ID),
-                CPUID INT REFERENCES CPU(ID), RAMID INT REFERENCES RAM(ID), OSNAME VARCHAR(30))"""
-                cursor.execute(query)
+            query = """DROP TABLE IF EXISTS USERREC CASCADE"""
+            cursor.execute(query)
 
-                query = """DROP TABLE IF EXISTS USERREC CASCADE"""
-                cursor.execute(query)
+            query = """CREATE TABLE USERREC (ID SERIAL PRIMARY KEY,
+            USERID INT REFERENCES USERDB(ID),GAMEID INT,DATE TIMESTAMP NOT NULL)"""
+            cursor.execute(query)
 
-                query = """CREATE TABLE USERREC (ID SERIAL PRIMARY KEY,
-                USERID INT REFERENCES USERDB(ID),GAMEID INT,DATE TIMESTAMP NOT NULL)"""
-                cursor.execute(query)
+            query = """DROP TABLE IF EXISTS USERFAV CASCADE"""
+            cursor.execute(query)
+            query = """CREATE TABLE USERFAV (ID SERIAL PRIMARY KEY,
+            USERID INT REFERENCES USERDB(ID),GAMEID INT)"""
+            cursor.execute(query)
 
-                query = """DROP TABLE IF EXISTS USERFAV CASCADE"""
-                cursor.execute(query)
-                query = """CREATE TABLE USERFAV (ID SERIAL PRIMARY KEY,
-                USERID INT REFERENCES USERDB(ID),GAMEID INT)"""
-                cursor.execute(query)
+            query = """INSERT INTO USERDB(NAME,PSW,EMAIL) VALUES(%s, %s, %s)   """
+            cursor.execute(query,('koray', pwd_context.encrypt('123'), 'koray@itu.edu.tr',))
+            #
+            query = """INSERT INTO USERDB(NAME,PSW,EMAIL) VALUES(%s, %s, %s)   """
+            cursor.execute(query,('turgut', pwd_context.encrypt('123'), 'turgut@itu.edu.tr',))
 
-                query = """INSERT INTO USERDB(NAME,PSW,EMAIL) VALUES(%s, %s, %s)   """
-                cursor.execute(query,('koray', pwd_context.encrypt('123'), 'koray@itu.edu.tr',))
-                #
-                query = """INSERT INTO USERDB(NAME,PSW,EMAIL) VALUES(%s, %s, %s)   """
-                cursor.execute(query,('turgut', pwd_context.encrypt('123'), 'turgut@itu.edu.tr',))
-
-            SystemRequirementsChecker()
-            flash("Database initialized.")
-            return redirect(url_for('link1.home_page'))
-    else:
-        flash("Use POST Method for INITDB!")
+        SystemRequirementsChecker()
+        flash("Database initialized.")
         return redirect(url_for('link1.home_page'))
 
 
