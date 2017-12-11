@@ -108,8 +108,8 @@ def engine():
 
 def requirementsCompare(game):
 	gamereq = gameReqGet(game['name'])
-	if not gamereq:
-		return False
+	if gamereq['Minimum']['CPU']['Intel'] == 'noreq':
+		return None
 	usersystem = getspecsId()
 	if not usersystem:
 		return None

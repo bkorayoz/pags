@@ -78,8 +78,8 @@ def fetch_requirements(title):
             if 'GHz' in recommended_amd_cpu or 'MHz' in recommended_amd_cpu:
                 recommended_amd_cpu = recommended_amd_cpu.rsplit(' ', 1)[0]
 
-            requirements['Recommended']['CPU']['Intel'] = recommended_intel_cpu
-            requirements['Recommended']['CPU']['AMD'] = recommended_amd_cpu
+            requirements['Minimum']['CPU']['Intel'] = recommended_intel_cpu
+            requirements['Minimum']['CPU']['AMD'] = recommended_amd_cpu
 
         minimum_gpu_line = [line for line in game_page if "Minimum graphic card requirement" in line]
         if len(minimum_gpu_line) != 0:
@@ -118,8 +118,8 @@ def fetch_requirements(title):
             if 'GB' in recommended_amd_gpu or 'MB' in recommended_amd_gpu:
                 recommended_amd_gpu = recommended_amd_gpu.rsplit(' ', 1)[0]
 
-            requirements['Recommended']['GPU']['Nvidia'] = recommended_nvidia_gpu
-            requirements['Recommended']['GPU']['AMD'] = recommended_amd_gpu
+            requirements['Minimum']['GPU']['Nvidia'] = recommended_nvidia_gpu
+            requirements['Minimum']['GPU']['AMD'] = recommended_amd_gpu
 
         minimum_ram_line = [line for line in game_page if "Minimum RAM Requirement" in line]
         if len(minimum_ram_line) != 0:
@@ -135,7 +135,7 @@ def fetch_requirements(title):
             split1 = split0[1].split('</span>', 1)
             recommended_ram = split1[0]
 
-            requirements['Recommended']['RAM'] = recommended_ram
+            requirements['Minimum']['RAM'] = recommended_ram
 
 
 

@@ -48,7 +48,7 @@ def sysinfoget():
 def gameReqGet(gameName):
     rawRequirements = fetch_requirements(gameName)
     if not rawRequirements:
-        return False
+        return {'Minimum': { 'CPU':{'Intel': 'noreq' }}}
     requirements = {'Minimum': {
                                  'CPU': {
                                           'Intel': hwNametoIdCpu(h.search_cpu(addZero(eraseFromString(rawRequirements['Minimum']['CPU']['Intel'], '(', ')')))),
@@ -66,7 +66,7 @@ def gameReqGet(gameName):
 def gameReqGetWithName(gameName):
     rawRequirements = fetch_requirements(gameName)
     if not rawRequirements:
-        return False
+        return {'Minimum': { 'CPU':{'Intel': 'noreq' }}}
     requirements = {'Minimum': {
                                  'CPU': {
                                           'Intel': h.search_cpu(addZero(eraseFromString(rawRequirements['Minimum']['CPU']['Intel'], '(', ')'))),
