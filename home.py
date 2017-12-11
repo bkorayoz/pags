@@ -12,7 +12,9 @@ from flask import Flask
 from flask import render_template, Response
 from flask import request, current_app
 from passlib.apps import custom_app_context as pwd_context
+import message as mes
 from flask_login.utils import login_required
+from fetch_game_requirements import fetch_requirements
 from flask_login import login_manager, login_user, logout_user, confirm_login,current_user
 from urllib.parse import urlparse, urljoin
 from classes import UserList,User
@@ -34,7 +36,8 @@ debate_ex = "https://www.game-debate.com/games/index.php?g_id=1164"
 
 @link1.route('/')
 def home_page():
-
+    # r = requests.get(debate_games).text
+    # print(text)
     # print("------")
     # print(search_cpu("intel(r) core(tm) i5-3427u cpu @ 1.80ghz"))
     # print(search_cpu("intel core i5-3427u"))
@@ -72,8 +75,14 @@ def gameprofile(id):
     except:
         pass
     #print(str(igdb_with_name(game['name'])[0]))
-    print(str(r))
+
+    #requirements=mes.gameReqGet(r['name'])
+
+    #print(str(requirements))
     return render_template('game_profile.html', game = r)
+
+
+
 
 def is_safe_url(target):
     ref_url = urlparse(request.host_url)
