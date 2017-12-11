@@ -47,6 +47,8 @@ def sysinfoget():
 @link4.route('/gameReqGet/<gameName>')
 def gameReqGet(gameName):
     rawRequirements = fetch_requirements(gameName)
+    if not rawRequirements:
+        return False
     requirements = {'Minimum': {
                                  'CPU': {
                                           'Intel': hwNametoIdCpu(h.search_cpu(addZero(eraseFromString(rawRequirements['Minimum']['CPU']['Intel'], '(', ')')))),
@@ -121,7 +123,7 @@ def getScoreCpu(id):
     if score:
         return score[0]
     else:
-        return None
+        return '0'
 
 def getScoreGpu(id):
     with dbapi2.connect(current_app.config['dsn']) as connection:
@@ -132,5 +134,5 @@ def getScoreGpu(id):
     if score:
         return score[0]
     else:
-        return None
+        return '0'
 

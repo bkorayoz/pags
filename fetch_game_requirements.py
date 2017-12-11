@@ -102,8 +102,8 @@ def fetch_requirements(title):
             if 'GB' in minimum_amd_gpu or 'MB' in minimum_amd_gpu:
                 minimum_amd_gpu = minimum_amd_gpu.rsplit(' ', 1)[0]
 
-            requirements['Minimum']['GPU']['Nvidia'] = recommended_nvidia_gpu
-            requirements['Minimum']['GPU']['AMD'] = recommended_amd_gpu
+            requirements['Minimum']['GPU']['Nvidia'] = minimum_nvidia_gpu
+            requirements['Minimum']['GPU']['AMD'] = minimum_amd_gpu
 
         recommended_gpu_line = [line for line in game_page if "Recommended graphic card requirement" in line]
         if len(recommended_gpu_line) != 0:

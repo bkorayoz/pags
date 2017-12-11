@@ -89,6 +89,8 @@ def engine():
 
 def requirementsCompare(game):
 	gamereq = gameReqGet(game['name'])
+	if not gamereq:
+		return False
 	usersystem = getspecsId()
 	print("usersystem: " + str(usersystem))
 	print("game name: " + str(game['name']))
