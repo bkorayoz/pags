@@ -1,18 +1,7 @@
 from whoosh.index import create_in
 from whoosh.fields import *
-#import datetime
 import json
-#import re
-#import psycopg2 as dbapi2
 import requests
-#from flask import redirect, Blueprint
-#from flask.helpers import url_for
-#from flask import Flask
-#from flask import render_template
-#from flask import request
-#from flask_login import UserMixin, LoginManager
-#from passlib.apps import custom_app_context as pwd_context
-#from flask import current_app
 from whoosh.qparser import QueryParser
 dsn = """user='vagrant' password='vagrant' host='localhost' port=5432 dbname='pags'"""
 

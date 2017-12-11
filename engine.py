@@ -27,7 +27,7 @@ def pags():
 		spek = False
 	else:
 		spek = True
-	return render_template('recomment.html', spec = spek)
+	return render_template('recommend.html', spec = spek)
 
 @link5.route("/engine", methods = ['POST', 'GET'])
 def engine():
@@ -43,8 +43,6 @@ def engine():
 
 	name = h.igdb_with_name(games1)[0]
 	related = name['games']
-	# for n in range(len(related)):
-	# 	relateds['0'].append(h.igdb_with_id(related[n]))
 	relateds['0'] = h.igdb_with_ids(related)
 	relatedids = maxgame(relateds['0'])
 	if relatedids[0] not in arr:
@@ -54,8 +52,6 @@ def engine():
 
 	name = h.igdb_with_name(games2)[0]
 	related = name['games']
-	# for n in range(len(related)):
-	# 	relateds['1'].append(h.igdb_with_id(related[n]))
 	relateds['1'] = h.igdb_with_ids(related)
 	relatedids = maxgame(relateds['1'])
 
@@ -66,8 +62,6 @@ def engine():
 
 	name = h.igdb_with_name(games3)[0]
 	related = name['games']
-	# for n in range(len(related)):
-	# 	relateds['2'].append(h.igdb_with_id(related[n]))
 	relateds['2'] = h.igdb_with_ids(related)
 	relatedids = maxgame(relateds['2'])
 
@@ -100,11 +94,12 @@ def engine():
 		except:
 		    pass
 		try:
-		    r['total_rating'] = round(r['total_rating'],2)
+			r['total_rating'] = round(r['total_rating'],2)
+			r['cover']['url'] = r['cover']['url'].replace("thumb","cover_small")
 		except:
 		    pass
 
-	return render_template('recomment.html', result = result, engin = engin)
+	return render_template('recommend.html', result = result, engin = engin)
 
 def requirementsCompare(game):
 	gamereq = gameReqGet(game['name'])

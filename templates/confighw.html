@@ -52,16 +52,8 @@
   </div>
 </div>
 </form>
-
-      <button type="submit" class="btn"><a href="{{ url_for('static', filename = 'getHardwareInfo.py')}}" class="w3-button w3-block w3-dark-grey" download="{{uid}}.py">Get My Specifitation</button>
-
-      <button type="submit" class="btn"><a href="{{ url_for('static', filename = 'RunMe.bat')}}" class="w3-button w3-block w3-dark-grey" download="RunMe.bat">Get Also My Specifitation</button>
-
-      <!-- <span style="color: #0000ff;">
-        <a href="{{ url_for('static', filename = 'RunMe.bat')}}" download="RunMe.bat"><a href="{{ url_for('static', filename = 'getHardwareInfo.py')}}" download="{{uid}}.py">
-                                    
-      <input id="downloadAllButton" type="button" value="Download files" /></span> -->
-
-<!--       <a href="{{ url_for('static', filename = 'userspec.py')}}" class="w3-button w3-block w3-dark-grey" download="{{uid}}.py"><span class="fa fa-microchip"></span>&nbsp;Get my hardware info!</a> -->
+      <a href="{{ url_for('static', filename = 'getHardwareInfo.py')}}" class="w3-button w3-dark-grey" download="{{uid}}.py"><span class="fa fa-download"></span> Get My Specifitation(.py)</a>
+    <a href="{{ url_for('static', filename = 'RunMe.bat')}}" class="w3-button w3-dark-grey" download="RunMe.bat"><span class="fa fa-download"></span> Get My Specifitation(.bat)</a>
+    <br>To save your system specifitations programmatically, you should download both of the files and run the .bat file.
 
 {% endblock %}

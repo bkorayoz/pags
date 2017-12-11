@@ -18,7 +18,6 @@
 <link rel="stylesheet" href="{{ url_for('static', filename = 'css/search_v4.css') }}" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <title>{% block title %}{% endblock %}</title>
-<!-- <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename = 'logo_colorful_c_v3.png') }}"> -->
 </head>
 <style>
 a:hover{
@@ -66,16 +65,10 @@ a:hover{
                     <div class="form-group">
                        <label class="sr-only">Password</label>
                        <input type="password" name="psw" class="form-control" placeholder="Password" required><br>
-                                             <!-- <div class="help-block text-right"><a href="">Forget the password ?</a></div>
-                    </div> -->
                     <div class="form-group">
                        <button type="submit" class="btn btn-block">Sign in</button>
                     </div>
-                    <!-- <div class="checkbox">
-                       <label>
-                       <input type="checkbox"> keep me logged-in
-                       </label>
-                    </div> -->
+
                  </form>
               </div>
               <div class="bottom text-center">
@@ -110,17 +103,6 @@ a:hover{
  <p><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">&nbsp;</span>{{ message }}</strong></center></p>
  {% endfor %}
  </strong>
-
-<!-- </div>
-<div class="w3-button w3-padding-small w3-orange w3-right"><span onclick="this.parentElement.style.display='none'"
- >&times;</span>
-	</div> -->
-
-<!-- <div class="alert alert-warning"><strong>
-	{% for message in messages %}
-		<center> {{ message }} </center>
-	{% endfor %}
-	</strong></div> -->
 {% endif %}
 {% endwith %}
 </nav>
@@ -150,9 +132,7 @@ a:hover{
 			});
 		});
 	</script>
-
 	<!-- Page Content -->
-
 	<div class="container">
 
 		<div class="row">
@@ -161,22 +141,8 @@ a:hover{
 
 		</div>
 		<!-- /.row -->
-
 	</div>
-
 	<!-- /.container -->
 </body>
-
-
-<!-- <div id ="footer" style = "position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  padding: 1rem;
-  text-align: center;">
-
-  <b> &copy TURGUT KORAY BESTE</b>  <i>{{ current_time }}</i>
-
-   </div> -->
 
 </html>

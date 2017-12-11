@@ -37,25 +37,6 @@ debate_ex = "https://www.game-debate.com/games/index.php?g_id=1164"
 
 @link1.route('/')
 def home_page():
-    # r = requests.get(debate_games).text
-    # print(text)
-    # print("------")
-    # print(search_cpu("intel(r) core(tm) i5-3427u cpu @ 1.80ghz"))
-    # print(search_cpu("intel core i5-3427u"))
-    # print(search_cpu("intel celeron m processor 1.50ghz"))
-    # print(search_cpu("intel core2 duo e4500"))
-    # print(search_cpu("AMD Athlon 64 3000+"))
-    # print(search_cpu("athlon 3000+"))
-    # print(search_cpu("amd ryzen tr 1900x"))
-    # print("------origins intel")
-    # print(search_cpu("Intel Core i5-2400S 2.5GHz"))
-    # print(search_cpu("Core i5-2400S"))
-    # print("------origins amd")
-    # print(search_cpu("FX-6350")) # amd
-    # print(search_cpu("AMD FX-6350 Six-Core")) # amd
-    # print("------")
-    # print(search_cpu("amd a10-7700k apu r7 graphics"))
-    # print(search_gpu("Pentium 4 3.00GHz"))
     return render_template('home.html')
 
 @link1.route('/gameprofile/<int:id>')
@@ -73,9 +54,18 @@ def gameprofile(id):
         pass
     try:
         r['total_rating'] = round(r['total_rating'],2)
+        r['cover']['url'] = r['cover']['url'].replace("thumb","cover_big")
     except:
         pass
-    #print(str(igdb_with_name(game['name'])[0]))
+
+    i=0
+
+    try:
+        for g in r['screenshots']:
+            r['screenshots'][i]['url'] = g['url'].replace("thumb","screenshot_med")
+            i += 1
+    except:
+        pass
 
     requirements=mes.gameReqGetWithName(r['name'])
     flag = eng.requirementsCompare(r)
@@ -86,9 +76,6 @@ def gameprofile(id):
     else:
         c = 1
     return render_template('game_profile.html', game = r, req = requirements, canI = c)
-
-
-
 
 def is_safe_url(target):
     ref_url = urlparse(request.host_url)
@@ -305,7 +292,6 @@ def igdb_with_ids(arr):
 
 def igdb_with_name(gamename):
     ig = igdb(igdbkey)
-    #result = ig.games({'search': gamename, 'expand' : ['genres']}).json()
     result = ig.games({'search': gamename}).json()
     i = 0
     while i < len(result):
@@ -330,6 +316,7 @@ def igdb_with_name(gamename):
             pass
         try:
             r['total_rating'] = round(r['total_rating'],2)
+            r['cover']['url'] = r['cover']['url'].replace("thumb","cover_small")
         except:
             pass
 

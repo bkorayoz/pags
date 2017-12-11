@@ -1,5 +1,5 @@
 {% extends 'layout.html' %}
-{% block title %} game_profile {% endblock %}
+{% block title %} PAGS - {{game['name']}} {% endblock %}
 
 {% block content %}
 
@@ -50,51 +50,47 @@
 
 
 <div class="row">
-
+{%if game['cover']['url'] %}
     <div class="col-md-3 text-left">
       <div class="media">
         <br><br><br><br>
 			<div class="container">
-			  <img class="img-responsive" src="{{game['cover']['url']}}" width="460" height="345">
+			  <img class="img-responsive" src="{{game['cover']['url']}}">
 			</div>
       </div>
     </div>
-
+{% endif %}
     <div class="col-md-6 text-left">
     	<br>
     	<h3 class="header">
 			<p>
-				{{game['name']}}
+				<strong style="color : orange">{{game['name']}} </strong>
 			</p>
     	</h3>
     	<br>
-    	<div class="info">
-    		<u class="info3"><strong>Release Date:</strong></u>
-    		<br>
+      {%if game['release_dates'][0]['human'] %}
+    	<div class="info3">
+    		<strong style="color : orange"><i class="fa fa-calendar fa-2x" aria-hidden="true"></i></strong>&nbsp;
     		{{game['release_dates'][0]['human']}}
 
 		</div>
-      {% if req %}
-        <div class="info3"><u>System Requirements:</u></div>
-        <div> CPU: {{req['Minimum']['CPU']['Intel']}} / {{req['Minimum']['CPU']['AMD']}}  </div>
-        <div> GPU: {{req['Minimum']['GPU']['Nvidia']}} / {{req['Minimum']['GPU']['AMD']}}  </div>
-        <div> RAM: {{req['Minimum']['RAM']}}  </div>
-        {% endif %}
+    {% endif %}
+      {% if req['Minimum']['CPU']['Intel'] != "noreq" %}
+      <br>
+        <div class="info3">Minimum System Requirements:</div>
+        <div> <strong style="color : orange">CPU:</strong> {{req['Minimum']['CPU']['Intel']}} / {{req['Minimum']['CPU']['AMD']}}  </div>
+        <div> <strong style="color : orange">GPU:</strong> {{req['Minimum']['GPU']['Nvidia']}} / {{req['Minimum']['GPU']['AMD']}}  </div>
+        <div> <strong style="color : orange">RAM:</strong> {{req['Minimum']['RAM']}}  </div>
+      {% endif %}
         <br>
-        <div class="info3"><u>Can I Run It:
-          {% if canI == -1 %} Bilmem
-          {% elif canI == 0 %} NO
-          {% else %} YUP
+        <div class="info3">Can I Run It:
+          {% if canI == -1 %} <i class="fa fa-question fa-lg" aria-hidden="true"></i>
+          {% elif canI == 0 %} <i style="color:red"class="fa fa-frown-o fa-lg" aria-hidden="true"></i>
+          {% else %}<i style="color:green"class="fa fa-smile-o fa-lg" aria-hidden="true"></i>
           {% endif %}
+          </div>
 
-        </u></div>
-        <u><font size=5 color="orange";>About</font></u>
-        <br>
-        <div class="info3 black"><u><strong><font color="orange";>Genre:</font></strong></u>
-        	{% for g in game['genres'] %}
-			<div>-{{ g }}  </div>
-			{% endfor %}
-        </div>
+
     </div>
     <div class="col-md-3">
     	<br><br>
@@ -126,20 +122,23 @@
 
 <br>
 <div class="info text-left">
+
 	<u class="info3"><strong><font color="orange"; >Game Summary:</font></strong></u>
 	<br>
 	<p class="info4">{{game['summary']}}</p>
+  <div class="info3 black"><u><strong><font color="orange";>Genre:</font></strong></u></div>
+    {% for g in game['genres'] %}
+    <p class="info4">
+ <i class="fa fa-circle" aria-hidden="true"></i>&nbsp;{{ g }}
+</p>
+{% endfor %}
+
 </div>
 
-
-<br>
-
+{% if game['screenshots'] %}
 	<div class="row">
 		<div class="col-md-7">
 		<h2>Screenshots:</h2>
-
-
-
 			  <meta name="viewport" content="initial-scale=5">
 			  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 			  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -147,29 +146,53 @@
 
 
 			<div class="container">
-			  <div id="myCarousel" class="carousel slide" data-ride="carousel">
+			  <div id="myCarousel" class="carousel slide" data-ride="carousel"style="height=320px; width:569px;">
 			    <!-- Indicators -->
 			    <ol class="carousel-indicators">
 			      <li data-target="#myCarousel" data-slide-to="0" class="active" ></li>
 			      <li data-target="#myCarousel" data-slide-to="1"></li>
 			      <li data-target="#myCarousel" data-slide-to="2"></li>
 			    </ol>
-
+<!-- {% if game['screenshots'][0]['url'] or game['screenshots'][1]['url'] or game['screenshots'][2]['url']%}
 			    <!-- Wrapper for slides  style="height=400%; width:360px;"-->
-			    <div class="carousel-inner">
+			    <div class="carousel-inner" >
+{% if game['screenshots'][0] and game['screenshots'][0]['url'] %}
 			      <div class="item active">
-			        <img  src="{{game['screenshots'][0]['url']}}"  style="height=400%; width:360px;">
+			        <img  align="middle" src="{{game['screenshots'][0]['url']}}">
 			      </div>
-
+            {% endif %}
+{% if game['screenshots'][1] and game['screenshots'][1]['url'] %}
 			      <div class="item">
-			        <img  src="{{game['screenshots'][1]['url']}}"  style="height=400%; width:360px;">
+			        <img  align="middle" src="{{game['screenshots'][1]['url']}}">
 			      </div>
-
+            {% endif %}
+{% if game['screenshots'][2] and game['screenshots'][2]['url'] %}
 			      <div class="item">
-			        <img  src="{{game['screenshots'][2]['url']}}"  style="height=400%; width:360px;">
+			        <img  align="middle" src="{{game['screenshots'][2]['url']}}">
 			      </div>
+            {% endif %}
 			    </div>
-
+{% endif %} -->
+{% if game['screenshots'][0]['url'] or game['screenshots'][1]['url'] or game['screenshots'][2]['url']%}
+			    <!-- Wrapper for slides  style="height=400%; width:360px;"-->
+			    <div class="carousel-inner" >
+{% if game['screenshots'][0] and game['screenshots'][0]['url'] %}
+			      <div class="item active">
+			        <img  align="middle" src="{{game['screenshots'][0]['url']}}">
+			      </div>
+            {% endif %}
+{% if game['screenshots'][1] and game['screenshots'][1]['url'] %}
+			      <div class="item">
+			        <img  align="middle" src="{{game['screenshots'][1]['url']}}">
+			      </div>
+            {% endif %}
+{% if game['screenshots'][2] and game['screenshots'][2]['url'] %}
+			      <div class="item">
+			        <img  align="middle" src="{{game['screenshots'][2]['url']}}">
+			      </div>
+            {% endif %}
+			    </div>
+{% endif %}
 			    <!-- Left and right controls -->
 			    <a class="left carousel-control" href="#myCarousel" data-slide="prev">
 			      <span class="glyphicon glyphicon-chevron-left"></span>
@@ -181,12 +204,12 @@
 			    </a>
 			  </div>
 			</div>
-
-
-
 		</div>
+  {% endif %}
+        {% if game['url'] or game['websites']%}
 		<div class="col-md-5">
 			<br><br>
+              {% if game['url'] %}
 			<div> <u>IGDB Link:</u> </div><br><br>
 			<div>
 				<input type="button" class="btn btn-primary btn-lg" value="IGDB" onclick=" relocate_igdb()">
@@ -196,8 +219,12 @@
 				     location.href = "{{game['url']}}";
 				}
 				</script>
-			</div><br><br><br>
+			</div>
+      {% endif %}
+      <br><br><br>
+              {% if game['websites'] %}
 			<div> <u>Other Pages:</u> </div><br><br>
+              {% if game['websites'][0] and game['websites'][0]['url'] %}
 			<div>
 				<input type="button" class="btn btn-primary btn-lg" value="See..." onclick=" relocate_wiki()">
 				<script>
@@ -206,7 +233,8 @@
 				     location.href = "{{game['websites'][0]['url']}}";
 				}
 				</script>
-			</div><br><br>
+			</div>{% endif %}<br><br>
+              {% if game['websites'][1] and game['websites'][1]['url'] %}
 			<div>
 				<input type="button" class="btn btn-primary btn-lg" value="See..." onclick=" relocate_wikia()">
 				<script>
@@ -216,12 +244,10 @@
 				}
 				</script>
 			</div>
-
+      {% endif %}
+{% endif %}
 		</div>
+    {% endif %}
 	</div>
-
-
-
-
 
 {% endblock %}

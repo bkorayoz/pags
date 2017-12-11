@@ -38,19 +38,9 @@ def load_user(user_id):
 
 @login_manager.unauthorized_handler
 def unauthorized():
-    # do stuff
     flash("Unauthorized Access. Please Sign In or Sign Up!")
     return redirect(url_for('link1.home_page'))
 
-def get_elephantsql_dsn(vcap_services):
-    """Returns the data source name for ElephantSQL."""
-    parsed = json.loads(vcap_services)
-    uri = parsed["elephantsql"][0]["credentials"]["uri"]
-    match = re.match('postgres://(.*?):(.*?)@(.*?)(:(\d+))?/(.*)', uri)
-    user, password, host, _, port, dbname = match.groups()
-    dsn = """user='{}' password='{}' host='{}' port={}
-             dbname='{}'""".format(user, password, host, port, dbname)
-    return dsn
 
 
 @app.route('/initdb', methods = ['GET', 'POST'])
@@ -113,9 +103,6 @@ def initialize_database():
                 #
                 query = """INSERT INTO USERDB(NAME,PSW,EMAIL) VALUES(%s, %s, %s)   """
                 cursor.execute(query,('turgut', pwd_context.encrypt('123'), 'turgut@itu.edu.tr',))
-                #
-                # query = """INSERT INTO USERDB(NAME,REALNAME,PSW,NUMBER,EMAIL) VALUES(%s, %s, %s, %s, %s)   """
-                # cursor.execute(query,('beste','Beste Burcu Bayhan', pwd_context.encrypt('123'),12345, 'beste@itu.edu.tr',))
 
             SystemRequirementsChecker()
             flash("Database initialized.")
@@ -132,10 +119,8 @@ if __name__ == '__main__':
     else:
         port, debug = 5000, True
     VCAP_SERVICES = os.getenv('VCAP_SERVICES')
-    if VCAP_SERVICES is not None:
-        app.config['dsn'] = get_elephantsql_dsn(VCAP_SERVICES)
-    else:
-        app.config['dsn'] = """user='vagrant' password='vagrant'
+
+    app.config['dsn'] = """user='vagrant' password='vagrant'
                                host='localhost' port=5432 dbname='pags'"""
 
     REMEMBER_COOKIE_DURATION = timedelta(seconds = 10)

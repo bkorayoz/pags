@@ -66,7 +66,6 @@ def savehw():
 
         return redirect(url_for('link3.userProfile'))
 
-
 def getspecsId():
     try:
         uid = User(current_user.name,"zzz", "zzz").get_id()[0]
@@ -116,7 +115,6 @@ def getram():
         cursor.execute(query)
         arr = cursor.fetchall()
         return arr
-
 
 @link3.route('/edit')
 @login_required
