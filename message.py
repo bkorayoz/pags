@@ -12,7 +12,7 @@ from passlib.apps import custom_app_context as pwd_context
 from flask_login.utils import login_required
 from flask_login import login_manager, login_user, logout_user,current_user
 from fetch_game_requirements import fetch_requirements
-from home import search_cpu, search_gpu
+import home as h
 
 link4 = Blueprint('link4',__name__)
 
@@ -49,12 +49,12 @@ def gameReqGet(gameName):
     rawRequirements = fetch_requirements(gameName)
     requirements = {'Minimum': {
                                  'CPU': {
-                                          'Intel': hwNametoIdCpu(search_cpu(addZero(eraseFromString(rawRequirements['Minimum']['CPU']['Intel'], '(', ')')))),
-                                          'AMD': hwNametoIdCpu(search_cpu(addZero(eraseFromString(rawRequirements['Minimum']['CPU']['AMD'], '(', ')'))))
+                                          'Intel': hwNametoIdCpu(h.search_cpu(addZero(eraseFromString(rawRequirements['Minimum']['CPU']['Intel'], '(', ')')))),
+                                          'AMD': hwNametoIdCpu(h.search_cpu(addZero(eraseFromString(rawRequirements['Minimum']['CPU']['AMD'], '(', ')'))))
                                         },
                                  'GPU': {
-                                          'Nvidia': hwNametoIdGpu(search_gpu(eraseFromString(rawRequirements['Minimum']['GPU']['Nvidia'], '(', ')'))),
-                                          'AMD': hwNametoIdGpu(search_gpu(eraseFromString(rawRequirements['Minimum']['GPU']['AMD'], '(', ')')))
+                                          'Nvidia': hwNametoIdGpu(h.search_gpu(eraseFromString(rawRequirements['Minimum']['GPU']['Nvidia'], '(', ')'))),
+                                          'AMD': hwNametoIdGpu(h.search_gpu(eraseFromString(rawRequirements['Minimum']['GPU']['AMD'], '(', ')')))
                                         },
                                  'RAM': rawRequirements['Minimum']['RAM']
                                },
