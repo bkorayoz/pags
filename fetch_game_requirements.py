@@ -21,34 +21,42 @@ dsn = """user='vagrant' password='vagrant' host='localhost' port=5432 dbname='pa
 
 def fetch_requirements(title):
     r = requests.get("https://www.game-debate.com/game/api/list").json()
+    print("sayfaya ulaştı")
 
     schema = Schema(title=TEXT(stored=True), path=ID(stored=True), content=TEXT)
     ix = create_in("gamelist", schema)
     writer = ix.writer()
     for game in r:
-        writer.add_document(title=game['g_title'], path=u"/a",content=game['g_title'])
+        writer.add_document(title=game['g_title'], path=game['g_id'],content=game['g_title'])
     writer.commit()
-    with  ix.searcher() as searcher:
+    with ix.searcher() as searcher:
         parser = qparser.QueryParser("content", ix.schema)
         parser.add_plugin(qparser.FuzzyTermPlugin())
         parser.remove_plugin_class(qparser.PhrasePlugin)
         parser.add_plugin(qparser.SequencePlugin("!(~(?P<slop>[1-9][0-9]*))?"))
         keywords = title.split(' ')
-        download('stopwords')
+        #download('stopwords')
         keywords = [word for word in keywords if word not in stopwords.words('english')]
         for i, keyword in enumerate(keywords):
-            keywords[i] = keyword + '~2'
+            try:
+                int(keywords[i])
+                continue
+            except ValueError:
+                keywords[i] = keyword + '~2'
         title = ' '.join(keywords)
         title = '"' + title + '"'
+        print(title)
         query = parser.parse(title)
         results = searcher.search(query)
         if results.is_empty():
             return False
-        title = results[0]['title']
-        game_dict = next((item for item in r if item['g_title'] == title), False)
-        if game_dict is False:
-            return False
-        game_id = game_dict['g_id']
+        #title = results[0]['title']
+        game_id = results[0]['path']
+        print('id:'+game_id)
+        #game_dict = next((item for item in r if item['g_title'] == title), False)
+        #if game_dict is False:
+        #    return False
+        #game_id = game_dict['g_id']
 
         game_page = requests.get("https://www.game-debate.com/games/index.php?g_id=" + game_id).text
  #       print(game_page)
