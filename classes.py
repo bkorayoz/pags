@@ -37,12 +37,11 @@ class User(UserMixin):
             return usr
 
 class UserList:
-    def __init__(self, dbfile):
-        self.dbfile = dbfile
+    def __init__(self):
         self.last_key = None
 
     def add_user(self, newuser):
-        with dbapi2.connect(self.dbfile) as connection:
+        with dbapi2._connect(current_app.config['dsn']) as connection:
             cursor = connection.cursor()
             query = "INSERT INTO USERDB (NAME, EMAIL, PSW) VALUES (%s, %s, %s)"
             cursor.execute(query, (newuser.name,newuser.email, newuser.psw))
@@ -50,7 +49,7 @@ class UserList:
             self.last_key = cursor.lastrowid
 
     def verify_user(self,uname,upsw):
-        with dbapi2.connect(self.dbfile) as connection:
+        with dbapi2._connect(current_app.config['dsn']) as connection:  
             cursor = connection.cursor()
             query = "SELECT NAME, PSW FROM USERDB WHERE (NAME = %s)"
             cursor.execute(query, (uname,))

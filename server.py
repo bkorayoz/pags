@@ -140,5 +140,4 @@ if __name__ == '__main__':
 
     REMEMBER_COOKIE_DURATION = timedelta(seconds = 10)
 
-    app.store = UserList(os.path.join(os.path.dirname(__file__),app.config['dsn']))
     app.run(host='0.0.0.0', port=port, debug=debug)
