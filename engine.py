@@ -17,6 +17,9 @@ from message import gameReqGet, getScoreCpu, getScoreGpu
 from user import getspecsId
 
 link5 = Blueprint('link5',__name__)
+gamecategory = ["Main Game", "DLC/Addon", "Expansion", "Bundle","Standalone Expansion"]
+gamestatus = ["Released","Alpha","Beta","Early Access","Offline","Cancelled"]
+gamegenre = [{"id":2,"name":"Point-and-click"},{"id":4,"name":"Fighting"},{"id":5,"name":"Shooter"},{"id":7,"name":"Music"},{"id":8,"name":"Platform"},{"id":9,"name":"Puzzle"},{"id":10,"name":"Racing"},{"id":11,"name":"Real Time Strategy (RTS)"},{"id":12,"name":"Role-playing (RPG)"},{"id":13,"name":"Simulator"},{"id":14,"name":"Sport"},{"id":15,"name":"Strategy"},{"id":16,"name":"Turn-based strategy (TBS)"},{"id":24,"name":"Tactical"},{"id":25,"name":"Hack and slash/Beat 'em up"},{"id":26,"name":"Quiz/Trivia"},{"id":30,"name":"Pinball"},{"id":31,"name":"Adventure"},{"id":32,"name":"Indie"},{"id":33,"name":"Arcade"}]
 
 @link5.route('/pags')
 def pags():
@@ -36,7 +39,7 @@ def engine():
 	relateds = { '0':[], '1':[], '2':[] }
 	relatedids = []
 	arr = []
-	bla = []
+	result = []
 
 	name = igdb_with_name(games1)[0]
 	related = name['games']
@@ -79,21 +82,35 @@ def engine():
 			for k in range(len(relateds[str(i)])):
 				if relateds[str(i)][k]['id'] == arr[j]:
 					if getspecsId() == None or requirementsCompare(relateds[str(i)][k]):
-						bla.append(relateds[str(i)][k])
+						result.append(relateds[str(i)][k])
 						control = True
 						break
 			if control:
 				break
 
-	return render_template('recomment.html', result = bla, engin = engin)
+	for r in result:
+		r['category'] = gamecategory[r['category']]
+		i = 0
+		try:
+		    for g in r['genres']:
+		        for gn in gamegenre:
+		            if g==gn['id']:
+		                r['genres'][i] = gn['name']
+		        i += 1
+		except:
+		    pass
+		try:
+		    r['total_rating'] = round(r['total_rating'],2)
+		except:
+		    pass
+
+	return render_template('recomment.html', result = result, engin = engin)
 
 def requirementsCompare(game):
 	gamereq = gameReqGet(game['name'])
 	if not gamereq:
 		return False
 	usersystem = getspecsId()
-	print("usersystem: " + str(usersystem))
-	print("game name: " + str(game['name']))
 	if not usersystem:
 		return None
 	else:
@@ -129,5 +146,4 @@ def maxgame(input):
 	ret = []
 	ret.append(max_i)
 	ret.append(max2_i)
-	print("max game return: " + str(ret))
 	return ret

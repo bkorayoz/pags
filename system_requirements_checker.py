@@ -54,7 +54,6 @@ def SystemRequirementsChecker():
                 name = cpu[2] + ' ' + cpu[3]
                 searcht = cpu_searchterm[i]
                 istr = str(i)
-                print(istr + " | " + name + " -> " + searcht)
                 score = cpu[5]
                 ranking = cpu[4]
                 cursor.execute(query, (name, score, ranking,searcht,))
@@ -70,7 +69,6 @@ def SystemRequirementsChecker():
                 name = gpu[2] + ' ' + gpu[3]
                 searcht = gpu_searchterm[i]
                 istr = str(i)
-                print(istr + " | " + name + " -> " + searcht)
                 score = gpu[5]
                 ranking = gpu[4]
                 cursor.execute(query, (name, score, ranking, searcht,))

@@ -61,8 +61,6 @@ def gameReqGet(gameName):
                                  'RAM': rawRequirements['Minimum']['RAM']
                                },
                    }
-
-    print(str(requirements))
     return requirements
 
 def eraseFromString(term, deliminator1, deliminator2):
@@ -135,4 +133,3 @@ def getScoreGpu(id):
         return score[0]
     else:
         return '0'
-

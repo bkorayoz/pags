@@ -77,9 +77,9 @@ def gameprofile(id):
         pass
     #print(str(igdb_with_name(game['name'])[0]))
 
-    #requirements=mes.gameReqGet(r['name'])
+    requirements=mes.gameReqGet(r['name'])
 
-    #print(str(requirements))
+    print(str(requirements))
     return render_template('game_profile.html', game = r)
 
 
