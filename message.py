@@ -63,6 +63,24 @@ def gameReqGet(gameName):
                    }
     return requirements
 
+def gameReqGetWithName(gameName):
+    rawRequirements = fetch_requirements(gameName)
+    if not rawRequirements:
+        return False
+    requirements = {'Minimum': {
+                                 'CPU': {
+                                          'Intel': h.search_cpu(addZero(eraseFromString(rawRequirements['Minimum']['CPU']['Intel'], '(', ')'))),
+                                          'AMD': h.search_cpu(addZero(eraseFromString(rawRequirements['Minimum']['CPU']['AMD'], '(', ')')))
+                                        },
+                                 'GPU': {
+                                          'Nvidia': h.search_gpu(eraseFromString(rawRequirements['Minimum']['GPU']['Nvidia'], '(', ')')),
+                                          'AMD': h.search_gpu(eraseFromString(rawRequirements['Minimum']['GPU']['AMD'], '(', ')'))
+                                        },
+                                 'RAM': rawRequirements['Minimum']['RAM']
+                               },
+                   }
+    return requirements
+
 def eraseFromString(term, deliminator1, deliminator2):
     tag = False
     out = ""
